@@ -6,12 +6,14 @@ from matplotlib import pyplot as plt
 
 
 
-class Planet():
-    pass
+class Planet:
+    def __init__(self, name):
+        self.name = name
 class G:
     playing = True
     planets = []
     patches = []
+    texts = []
     xy_list = []
 
 #fig = plt.figure(figsize=(10, 7))
@@ -97,136 +99,98 @@ def buttonpush(event):
     # shift, ctrl, alt all set dv = 1
     '''
 
+    speed = 1
+
     match event.key:
         case 'q':
             g.playing = 0
+
         case 'space':
-            if g.moving:
-                g.moving = 0
-            else:
-                g.moving = 1
+            g.moving = 1 - g.moving
+
         case 'tab':
             g.moving = 2
+
         case 'leftarrow':
-            t = np.linspace(0, 2 * np.pi, 200)
-
-            g.sunr = g.sunr / 2
-            g.sunbx = g.sunr * np.cos(t)
-            g.sunby = g.sunr * np.sin(t)
-
-            t = np.linspace(0, 2 * np.pi, 20)
-            g.earthr = g.earthr / 2
-            g.earthbx = g.earthr * np.cos(t)
-            g.earthby = g.earthr * np.sin(t)
-
-            g.halleyr = g.halleyr / 2
-            g.halleybx = g.halleyr * np.cos(t)
-            g.halleyby = g.halleyr * np.sin(t)
-
-            g.mercuryr = g.mercuryr / 2
-            g.mercurybx = g.mercuryr * np.cos(t)
-            g.mercuryby = g.mercuryr * np.sin(t)
-
-            t = np.linspace(0, 2 * np.pi, 80)
-
-            g.jupiterr = g.jupiterr / 2
-            g.jupiterbx = g.jupiterr * np.cos(t)
-            g.jupiterby = g.jupiterr * np.sin(t)
-
-            g.saturnr = g.saturnr / 2
-            g.saturnbx = g.saturnr * np.cos(t)
-            g.saturnby = g.saturnr * np.sin(t)
-
-            t = np.linspace(0, 2 * np.pi, 20)
-
-            g.uranusr = g.uranusr / 2
-            g.uranusbx = g.uranusr * np.cos(t)
-            g.uranusby = g.uranusr * np.sin(t)
-
-            g.neptuner = g.neptuner / 2
-            g.neptunebx = g.neptuner * np.cos(t)
-            g.neptuneby = g.neptuner * np.sin(t)
-
-            g.marsr = g.marsr / 2
-            g.marsbx = g.marsr * np.cos(t)
-            g.marsby = g.marsr * np.sin(t)
-
-            g.venusr = g.venusr / 2
-            g.venusbx = g.venusr * np.cos(t)
-            g.venusby = g.venusr * np.sin(t)
-
-            g.plutor = g.plutor / 2
-            g.plutobx = g.plutor * np.cos(t)
-            g.plutoby = g.plutor * np.sin(t)
+            speed = 0.5
 
         case 'rightarrow':
-            t = np.linspace(0, 2 * np.pi, 200)
-
-            g.sunr = g.sunr * 2
-            g.sunbx = g.sunr * np.cos(t)
-            g.sunby = g.sunr * np.sin(t)
-
-            t = np.linspace(0, 2 * np.pi, 20)
-            g.earthr = g.earthr * 2
-            g.earthbx = g.earthr * np.cos(t)
-            g.earthby = g.earthr * np.sin(t)
-
-            g.halleyr = g.halleyr * 2
-            g.halleybx = g.halleyr * np.cos(t)
-            g.halleyby = g.halleyr * np.sin(t)
-
-            g.mercuryr = g.mercuryr * 2
-            g.mercurybx = g.mercuryr * np.cos(t)
-            g.mercuryby = g.mercuryr * np.sin(t)
-
-            g.marsr = g.marsr * 2
-            g.marsbx = g.marsr * np.cos(t)
-            g.marsby = g.marsr * np.sin(t)
-
-            t = np.linspace(0, 2 * np.pi, 80)
-
-            g.jupiterr = g.jupiterr * 2
-            g.jupiterbx = g.jupiterr * np.cos(t)
-            g.jupiterby = g.jupiterr * np.sin(t)
-
-            g.saturnr = g.saturnr * 2
-            g.saturnbx = g.saturnr * np.cos(t)
-            g.saturnby = g.saturnr * np.sin(t)
-
-            t = np.linspace(0, 2 * np.pi, 20)
-
-            g.uranusr = g.uranusr * 2
-            g.uranusbx = g.uranusr * np.cos(t)
-            g.uranusby = g.uranusr * np.sin(t)
-
-            g.neptuner = g.neptuner * 2
-            g.neptunebx = g.neptuner * np.cos(t)
-            g.neptuneby = g.neptuner * np.sin(t)
-
-            g.venusr = g.venusr * 2
-            g.venusbx = g.venusr * np.cos(t)
-            g.venusby = g.venusr * np.sin(t)
-
-            g.plutor = g.plutor * 2
-            g.plutobx = g.plutor * np.cos(t)
-            g.plutoby = g.plutor * np.sin(t)
+            speed = 2
 
         case 'uparrow':
             g.xmax = g.xmax / 2
             g.ymax = g.ymax / 2
-            set(g.text, 'Position', [.8 * g.xmax, g.ymax])
+            #set(g.text, 'Position', [.8 * g.xmax, g.ymax])
+
         case 'downarrow':
             g.xmax = 2 * g.xmax
             g.ymax = 2 * g.ymax
-            set(g.text, 'Position', [.8 * g.xmax, g.ymax])
+            #set(g.text, 'Position', [.8 * g.xmax, g.ymax])
+
         case 'comma':
             g.v = g.v / 2
+
         case 'period':
             g.v = g.v * 2
+
         case 't':
             g.textvisible = g.textvisible + 1
+
         case _:
             print(f'{event.key=}') # show key info
+
+    if event.key == 'leftarrow' or event.key == 'rightarrow':
+        t = np.linspace(0, 2 * np.pi, 200)
+
+        g.sunr = g.sunr * speed
+        g.sunbx = g.sunr * np.cos(t)
+        g.sunby = g.sunr * np.sin(t)
+
+        t = np.linspace(0, 2 * np.pi, 20)
+        g.earthr = g.earthr * speed
+        g.earthbx = g.earthr * np.cos(t)
+        g.earthby = g.earthr * np.sin(t)
+
+        g.halleyr = g.halleyr * speed
+        g.halleybx = g.halleyr * np.cos(t)
+        g.halleyby = g.halleyr * np.sin(t)
+
+        g.mercuryr = g.mercuryr * speed
+        g.mercurybx = g.mercuryr * np.cos(t)
+        g.mercuryby = g.mercuryr * np.sin(t)
+
+        t = np.linspace(0, 2 * np.pi, 80)
+
+        g.jupiterr = g.jupiterr * speed
+        g.jupiterbx = g.jupiterr * np.cos(t)
+        g.jupiterby = g.jupiterr * np.sin(t)
+
+        g.saturnr = g.saturnr * speed
+        g.saturnbx = g.saturnr * np.cos(t)
+        g.saturnby = g.saturnr * np.sin(t)
+
+        t = np.linspace(0, 2 * np.pi, 20)
+
+        g.uranusr = g.uranusr * speed
+        g.uranusbx = g.uranusr * np.cos(t)
+        g.uranusby = g.uranusr * np.sin(t)
+
+        g.neptuner = g.neptuner * speed
+        g.neptunebx = g.neptuner * np.cos(t)
+        g.neptuneby = g.neptuner * np.sin(t)
+
+        g.marsr = g.marsr * speed
+        g.marsbx = g.marsr * np.cos(t)
+        g.marsby = g.marsr * np.sin(t)
+
+        g.venusr = g.venusr * speed
+        g.venusbx = g.venusr * np.cos(t)
+        g.venusby = g.venusr * np.sin(t)
+
+        g.plutor = g.plutor * speed
+        g.plutobx = g.plutor * np.cos(t)
+        g.plutoby = g.plutor * np.sin(t)
+
     return
 
 def get_settings():
@@ -600,49 +564,6 @@ def update_graphics():
 if __name__ == "__main__":
     #main()
 
-    '''
-
-    #https://stackoverflow.com/questions/60542734/animating-multiple-circles-in-orbit
-    import numpy as np
-    from matplotlib import pyplot as plt
-    from matplotlib import animation
-    import random
-
-    fig = plt.figure()
-    fig.set_dpi(100)
-    fig.set_size_inches(7, 6.5)
-
-    ax = plt.axes(xlim=(0, 10), ylim=(0, 10))
-    patch1 = plt.Circle((5, -5), 0.75, fc='y')
-    patch2 = plt.Circle((5, -5), 0.75, fc='y')
-
-    patch_list = [patch1, patch2]
-    angle = np.linspace(0, 2 * np.pi, 100)
-    xy1 = np.array([np.cos(angle) * 2,
-                    np.sin(angle) * 1]).T
-    xy2 = np.array([np.cos(angle) * 1,
-                    np.sin(angle) * 2]).T
-
-    xy_list = [xy1, xy2] # Initialize all lists
-
-    def init():
-        for p in patch_list:
-            ax.add_patch(p)
-        return patch_list
-
-    def animate(i):
-        for p, xy in zip(patch_list, xy_list):
-            p.set_center(xy[i])
-        return patch_list
-
-    anim = animation.FuncAnimation(fig, animate,
-                                   init_func=init,
-                                   frames=360,
-                                   interval=20,
-                                   blit=True)
-
-    plt.show()
-    '''
     # https://nickcharlton.net/posts/drawing-animating-shapes-matplotlib.html
     import numpy as np
     import matplotlib.pyplot as plt
@@ -652,24 +573,88 @@ if __name__ == "__main__":
     fig.set_dpi(100)
     fig.set_size_inches(7, 6.5)
 
+    g.playing = g.moving = 1
+    g.xmax, g.ymax = 4600, 3200
     ax = plt.axes(xlim=(0, 10), ylim=(0, 10))
+
+    #plt.axis('off')
+    #plt.title("Solsystemet")
+    #plt.axis([-g.xmax, g.xmax, -g.ymax, g.ymax])
+
     g = G()
+    g.t = 10000 * random.random() # new position
 
-    # new position
-    g.t = 10000 * random.random()
+    # Hardcode each planet attributes
 
-    earth = Planet()
+    '''
+    sun = Planet()
+    sun.r = 696.340
+    sun.bx = sun.r * np.cos(g.t)
+    sun.by = sun.r * np.sin(g.t)
+    g.planets.append(sun)
+    '''
+
+    earth = Planet("Earth")
     earth.cx = 100.0000180000000 * np.cos(g.t) - 1.6731633011693
     earth.cy = 99.9860196455882 * np.sin(g.t)
     earth.r = 6.371
     g.planets.append(earth)
 
-    halley = Planet()
+    halley = Planet("Halley")
     halley.cx = 1783.41442925537 * np.cos(g.t / 75.32) - 1724.8166181036783
     halley.cy = 107.3639924082853 * np.sin(g.t / 75.32)
     halley.r = 0.011
     g.planets.append(halley)
 
+    mercury = Planet("Mercury")
+    mercury.cx = 38.7098430000000 * np.cos(g.t / 0.240846) - 7.9601608881522
+    mercury.cy = 37.8825524974147 * np.sin(g.t / 0.240846)
+    mercury.r = 2.4397
+    g.planets.append(earth)
+
+    mars = Planet("Mars")
+    mars.cx = 152.3712430000000 * np.cos(g.t / 1.881) - 14.2261578635317
+    mars.cy = 151.7056759841467 * np.sin(g.t / 1.881)
+    mars.r = 3.3895
+    g.planets.append(mars)
+
+    jupiter = Planet("Jupiter")
+    jupiter.cx = 520.2480190000000 * np.cos(g.t / 11.86) - 25.2507058253821
+    jupiter.cy = 519.6348748195645 * np.sin(g.t / 11.86)
+    jupiter.r = 69.911
+    g.planets.append(jupiter)
+
+    saturn = Planet("Saturn")
+    saturn.cx = 954.1498830000000 * np.cos(g.t / 29.46) - 52.9631902430348
+    saturn.cy = 952.6788019622321 * np.sin(g.t / 29.46)
+    saturn.r = 58.232
+    g.planets.append(saturn)
+
+    uranus = Planet("Uranus")
+    uranus.cx = 1918.7979479999999 * np.cos(g.t / 84.01) - 89.9098829686152
+    uranus.cy = 1916.6903188031135 * np.sin(g.t / 84.01)
+    uranus.r = 25.362
+    g.planets.append(uranus)
+
+    neptune = Planet("Neptune")
+    neptune.cx = 3006.9527520000001 * np.cos(g.t / 164.8) - 26.9254276529813
+    neptune.cy = 3006.8321991933768 * np.sin(g.t / 164.8)
+    neptune.r = 24.622
+    g.planets.append(neptune)
+
+    venus = Planet("Venus")
+    venus.cx = 72.3321020000000 * np.cos(g.t / 0.615) - 0.4892536146070
+    venus.cy = 72.3304473277955 * np.sin(g.t / 0.615)
+    venus.r = 6.0518
+    g.planets.append(venus)
+
+    pluto = Planet("Pluto")
+    pluto.cx = 3948.6860350000001 * np.cos(g.t / 247.92065) - 982.06399176825134
+    pluto.cy = 3824.4660013106305 * np.sin(g.t / 247.92065)
+    pluto.r = 1.1883
+    g.planets.append(pluto)
+
+    # Automatic generate arrays
     for planet in g.planets:
         t = np.linspace(0, 2 * np.pi, 80)
         bx, by = planet.r * np.cos(t), planet.r * np.sin(t)
@@ -677,6 +662,8 @@ if __name__ == "__main__":
 
         patch = plt.Circle((planet.cx, planet.cy), .5)
         g.patches.append(patch)
+
+        g.texts.append(plt.text(planet.cx, planet.cy, planet.name))
 
     def init():
         for patch in g.patches:
@@ -688,6 +675,8 @@ if __name__ == "__main__":
             patch.set_center(planet.xy[i])
         return g.patches
 
+    cid = fig.canvas.mpl_connect('key_press_event', buttonpush)
+
     anim = animation.FuncAnimation(fig, animate,
                                    init_func=init,
                                    frames=80,
@@ -695,77 +684,3 @@ if __name__ == "__main__":
                                    interval=1,
                                    blit=True)
     plt.show()
-
-    exit()
-
-    # https://nickcharlton.net/posts/drawing-animating-shapes-matplotlib.html
-    import numpy as np
-    import matplotlib.pyplot as plt
-    import matplotlib.animation as animation
-
-    fig = plt.figure()
-    fig.set_dpi(100)
-    fig.set_size_inches(7, 6.5)
-
-    ax = plt.axes(xlim=(0, 10), ylim=(0, 10))
-    g = G()
-
-    # new position
-    g.t = 10000 * random.random()
-
-    g.earthcx = 100.0000180000000 * np.cos(g.t) - 1.6731633011693
-    g.earthcy = 99.9860196455882 * np.sin(g.t)
-
-    g.halleycx = 1783.41442925537 * np.cos(g.t / 75.32) - 1724.8166181036783
-    g.halleycy = 107.3639924082853 * np.sin(g.t / 75.32)
-
-    t = np.linspace(0, 2 * np.pi, 20)
-    g.earthr = 6.371
-    g.earthbx = g.earthr * np.cos(t)
-    g.earthby = g.earthr * np.sin(t)
-    g.earthb = np.array([g.earthbx, g.earthby]).T
-    #g.earthball = patch(g.earthbx, g.earthby, 'b')
-    earthball = plt.Circle((g.earthcx, g.earthcy), .5)
-    g.planets.append(earthball)
-    #g.xy_list.append(g.earthb)
-    g.xy_list.append(g.earthr)
-
-    t = np.linspace(0, 2 * np.pi, 20)
-    g.halleyr = 0.011
-    g.halleybx = g.halleyr * np.cos(t)
-    g.halleyby = g.halleyr * np.sin(t)
-    g.halleyb = np.array([g.halleybx, g.halleyby]).T
-    halleyball = plt.Circle((g.halleycx, g.halleycy), .5)
-    g.planets.append(halleyball)
-    #g.xy_list.append(g.halleyb)
-    g.xy_list.append(g.halleyr)
-    #g.halleytext = plt.text(g.halleycx, g.halleycy, "Halleys komet")
-
-    print(g.planets, g.xy_list)
-
-    def init():
-        for planet in g.planets:
-            ax.add_patch(planet)
-        return g.planets
-
-    def animate(i):
-        for planet, xy in zip(g.planets, g.xy_list):
-            #planet.set_center(xy[i])
-            planet.set_center((xy * np.cos(i), xy * np.sin(i)))
-        return g.planets
-
-    anim = animation.FuncAnimation(fig, animate,
-                                   init_func=init,
-                                   interval=.1,
-                                   blit=True,
-                                   save_count=50)
-
-    #fig = plt.figure(figsize=(10, 7))
-    for i in range(10):
-        axtest = plt.gca()
-        axtest.add_patch(plt.Circle((0.7, 0.2), 0.15))
-        axtest.add_patch(plt.Circle((0, 0), i/10))
-
-        plt.draw()
-        plt.pause(0.0001)
-        plt.clf()

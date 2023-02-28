@@ -13,7 +13,7 @@ get_settings();
 init_figure();
 create_ball();
 
-tic; % start timer
+tic % start timer
 while g.playing
     if g.moving==0, tic; drawnow; continue; end
     if g.moving==1, dt=toc; % get time since last bounce
@@ -249,6 +249,7 @@ function create_ball
 global g;
 % create a 'ball'
 t = linspace(0,2*pi,200);
+t
 
 g.sunr=696.340;
 g.sunbx=g.sunr*cos(t);
