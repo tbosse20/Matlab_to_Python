@@ -29,10 +29,10 @@ axis equal
 %breddegrader.
 
 %Bestem først rotationsvinklen i radianer
-theta=0000;
+theta=23.4*pi/180;
 %Bestem Efterfølgende rotationsmatricen R der roterer med en vinkel theta
 %omkring y-aksen
-R=0000;
+R=[cos(theta), 0, sin(theta); 0, 1 0; -sin(theta), 0, cos(theta)];
 %Roter punkterne på kuglen
 A=R*A;
 %Omtransformer til matricer og plot resultatet:
@@ -40,13 +40,13 @@ X=reshape(A(1,:),[m,n]);
 Y=reshape(A(2,:),[m,n]); 
 Z=reshape(A(3,:),[m,n]); 
 figure;
-surf(X,Y,Z)
+surf(X,Y,Z);
 axis equal
 
 %% Opgave (ii)
 %Vi skal i denne opgave bestemme en enhedsvektor der er parallel med linjen
 %gennem nord og sydpolen. 
-v=0000;
+v=R*[0;0;1];
 
 %% Opgave (iii)
 %Vi skal i denne opgave lave en animation af Jordens rotation om sin egen
@@ -81,13 +81,13 @@ for k =1:n_frames
     theta=k*2*pi/n_frames;
     %Udregn s og lambda for den kvatanion som vi skal bruge for at rotere
     %med en vinkel theta omkring v
-    s=0000;
-    lambda=0000;
+    s=cos(theta/2);
+    lambda=sin(theta/2);
     %Brug funktionerne left_multiplication og right_multiplication til at
     %definere passende matricer til at udregne rotationen qpq^(-1) hvor
     %q=[s,lambda*v]
-    L=left_multiplication(0000,0000);
-    R=right_multiplication(0000,0000);
+    L=left_multiplication(s,lambda*v);
+    R=right_multiplication(s,-lambda*v);
     %Vi omdanner nu vektorerne i A til kvatanioner ved at sætte deres
     %skalardel lig 0.
     Q=[zeros(1,n*m);A];
@@ -125,11 +125,19 @@ close(video)
 function L = left_multiplication(s,v)
 %Funktion der udregner matricen for venstre multiplikation med kvatanionen
 %[s,v]
-error('Implementation mangler')
+L=[
+    s,-v(1),-v(2),-v(3);
+    v(1),s,-v(3),v(2);
+    v(2),v(3),s,-v(1);
+    v(3),-v(2),v(1),s
+    ];
 end
 
 function R = right_multiplication(s,v)
 %Funktion der udregner matricen for højre multiplikation med kvatanionen
 %[s,v]
-error('Implementation mangler')
+R=[s,-v(1),-v(2),-v(3);
+v(1),s,v(3),-v(2);
+v(2),-v(3),s,v(1);
+v(3),v(2),-v(1),s];
 end
