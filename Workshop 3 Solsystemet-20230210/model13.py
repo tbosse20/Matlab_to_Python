@@ -41,6 +41,7 @@ class System:
     ]
 
     v = textvisible = playing = moving = 1
+    v = 0.5
     xmax, ymax = 4600, 3200
     trace_visible = 'on'
     tlen = 500
@@ -55,7 +56,8 @@ def main():
     update_cx_cy(system.t)
     init_figure()
     create_elements()
-    system.anim = animation.FuncAnimation(system.fig, update_graphics, interval=30, cache_frame_data=False)
+    system.anim = animation.FuncAnimation(
+        system.fig,update_graphics, interval=30, cache_frame_data=False)
     plt.show()
     print('Tak fordi du spillede!')
 
