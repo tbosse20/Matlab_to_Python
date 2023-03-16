@@ -23,7 +23,7 @@ plt.axis('off')
 plt.title("imshow(A,[])")
 
 fig.add_subplot(rows, columns, 3)
-plt.imshow(log_transform(A, 1/7))
+plt.imshow(log_transform(A, 1 / 7))
 plt.axis('off')
 plt.title("imshow(log\_transform(A,1/7))")
 
@@ -39,7 +39,7 @@ plt.show()
 A = np.loadtxt('delopgave3_1.txt')
 B = np.loadtxt('delopgave3_2.txt')
 
-#Vi får matlab til at vise de to billeder:
+# Vi får matlab til at vise de to billeder:
 fig = plt.figure(figsize=(10, 7))
 rows, columns = 1, 2
 
@@ -53,85 +53,31 @@ plt.imshow(B)
 
 plt.show()
 
+
 # A er et meget lille (16x16) billede.
 # Hvis vi forstørre det ser vi hvad der
 # sker når man anvender de forskellige
 # interpolationsmetoder.
-scale = 128
 
-width = int(A.shape[1] * scale / 100)
-height = int(A.shape[0] * scale / 100)
-dim = (width, height)
+def show_scaled_image(A, scale):
+    interpolations = [cv2.INTER_NEAREST, cv2.INTER_LINEAR, cv2.INTER_CUBIC]
 
-fig = plt.figure(figsize=(10, 7))
-rows, columns = 1, 3
+    fig = plt.figure(figsize=(10, 7))
+    rows, columns = 1, 3
 
-E = cv2.resize(A, dim, interpolation=cv2.INTER_NEAREST)
-fig.add_subplot(rows, columns, 1)
-plt.axis('off')
-plt.imshow(E)
+    width = int(A.shape[1] * scale / 100)
+    height = int(A.shape[0] * scale / 100)
+    dim = (width, height)
 
-E = cv2.resize(A, dim, interpolation=cv2.INTER_LINEAR)
-fig.add_subplot(rows, columns, 2)
-plt.axis('off')
-plt.imshow(E)
+    for i, interpolation in enumerate(interpolations):
+        E = cv2.resize(A, dim, interpolation=interpolation)
+        fig.add_subplot(rows, columns, i+1)
+        plt.axis('off')
+        plt.imshow(E)
 
-E = cv2.resize(A, dim, interpolation=cv2.INTER_CUBIC)
-fig.add_subplot(rows, columns, 3)
-plt.axis('off')
-plt.imshow(E)
+    plt.show()
 
-plt.show()
 
-# Now with scale at 0.5
-scale = 0.5
-
-width = int(A.shape[1] * scale)
-height = int(A.shape[0] * scale)
-dim = (width, height)
-
-fig = plt.figure(figsize=(10, 7))
-rows, columns = 1, 3
-E = cv2.resize(A, dim, interpolation=cv2.INTER_NEAREST)
-fig.add_subplot(rows, columns, 1)
-plt.axis('off')
-plt.imshow(E)
-
-E = cv2.resize(A, dim, interpolation=cv2.INTER_LINEAR)
-fig.add_subplot(rows, columns, 2)
-plt.axis('off')
-plt.imshow(E)
-
-E = cv2.resize(A, dim, interpolation=cv2.INTER_CUBIC)
-fig.add_subplot(rows, columns, 3)
-plt.axis('off')
-plt.imshow(E)
-
-plt.show()
-
-#Vi kan prøve at gøre noget lignende med B
-scale = 0.73
-
-width = int(A.shape[1] * scale)
-height = int(A.shape[0] * scale)
-dim = (width, height)
-
-fig = plt.figure(figsize=(10, 7))
-rows, columns = 1, 3
-
-E = cv2.resize(B, dim, interpolation=cv2.INTER_NEAREST)
-fig.add_subplot(rows, columns, 1)
-plt.axis('off')
-plt.imshow(E)
-
-E = cv2.resize(B, dim, interpolation=cv2.INTER_LINEAR)
-fig.add_subplot(rows, columns, 2)
-plt.axis('off')
-plt.imshow(E)
-
-E = cv2.resize(B, dim, interpolation=cv2.INTER_CUBIC)
-fig.add_subplot(rows, columns, 3)
-plt.axis('off')
-plt.imshow(E)
-
-plt.show()
+show_scaled_image(A, 128)
+show_scaled_image(A, 0.5)  # Now with scale at 0.5
+show_scaled_image(B, 0.73)  # Vi kan prøve at gøre noget lignende med B
