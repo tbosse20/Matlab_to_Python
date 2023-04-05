@@ -10,7 +10,7 @@ subplot(1,3,2)
 imshow(A,[])
 title('imshow(A,[])')
 subplot(1,3,3)
-imshow(log_transform(A,1/7))
+%imshow(log_transform(A,1/7))
 title('imshow(log\_transform(A,1/7))')
 
 

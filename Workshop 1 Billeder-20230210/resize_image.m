@@ -62,6 +62,7 @@ function A1=unit_step_row_interpolate(A,new_cols,method)
             k(AX(1,j)<=X(1,:))=j;
         end
         repvec(end)=new_cols-n_zeros;
+
         k=repmat(k,m,1);
         %Vi definerer nu variablen s hvor indgangene i hver række svarer
         %svarer til x-x_j i workshoppen.
@@ -72,8 +73,7 @@ function A1=unit_step_row_interpolate(A,new_cols,method)
         y1=A(:,1:end-1);
         y2=A(:,2:end);
         y3=[A(:,3:end),A(:,end)];
-
-
+    
         %Hvis lineær interpolation er valgt:
         if strcmp(method,'linear')
             %Vi definerer a og b som de er i delopgave 2(iii).
@@ -103,3 +103,4 @@ function A2 = unit_step_column_interpolate(A1,new_rows,method)
 error('Denne funktion er endnu ikke implementeret')
 
 end
+

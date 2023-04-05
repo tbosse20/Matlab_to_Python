@@ -64,6 +64,7 @@ scale = 128
 width = int(A.shape[1] * scale / 100)
 height = int(A.shape[0] * scale / 100)
 dim = (width, height)
+print(dim)
 
 fig = plt.figure(figsize=(10, 7))
 rows, columns = 1, 3
@@ -91,7 +92,7 @@ scale = 0.5
 width = int(A.shape[1] * scale)
 height = int(A.shape[0] * scale)
 dim = (width, height)
-
+print(dim)
 fig = plt.figure(figsize=(10, 7))
 rows, columns = 1, 3
 E = cv2.resize(A, dim, interpolation=cv2.INTER_NEAREST)

@@ -5,7 +5,7 @@ from log_transform import *
 
 # Delopgave 1
 # I denne delopgave skal vi anvende funktionen
-# log_transform fra delopgave 1(iii)
+# log_transform fra delopgave 1 (iii)
 
 A = np.loadtxt('delopgave1.txt')
 
@@ -15,7 +15,7 @@ rows, columns = 1, 3
 fig.add_subplot(rows, columns, 1)
 plt.imshow(A)
 plt.axis('off')
-plt.title("imshow(A)")
+plt.title("imshow(A,[])")
 
 fig.add_subplot(rows, columns, 2)
 plt.imshow(A)
@@ -23,9 +23,9 @@ plt.axis('off')
 plt.title("imshow(A,[])")
 
 fig.add_subplot(rows, columns, 3)
-plt.imshow(log_transform(A, 1 / 7))
+plt.imshow(log_transform(A, 1/7))
 plt.axis('off')
-plt.title("imshow(log\_transform(A,1/7))")
+plt.title("imshow(log_transform(A,1/7))")
 
 plt.show()
 
@@ -65,13 +65,13 @@ def show_scaled_image(A, scale):
     fig = plt.figure(figsize=(10, 7))
     rows, columns = 1, 3
 
-    width = int(A.shape[1] * scale / 100)
-    height = int(A.shape[0] * scale / 100)
+    width = int(A.shape[1] * scale)
+    height = int(A.shape[0] * scale)
     dim = (width, height)
 
     for i, interpolation in enumerate(interpolations):
         E = cv2.resize(A, dim, interpolation=interpolation)
-        fig.add_subplot(rows, columns, i+1)
+        fig.add_subplot(rows, columns, i + 1)
         plt.axis('off')
         plt.imshow(E)
 
@@ -81,3 +81,17 @@ def show_scaled_image(A, scale):
 show_scaled_image(A, 128)
 show_scaled_image(A, 0.5)  # Now with scale at 0.5
 show_scaled_image(B, 0.73)  # Vi kan prøve at gøre noget lignende med B
+
+
+# ------------------ #
+def plotFigures(figures: dict):
+    fig = plt.figure(figsize=(10, 7))
+    rows, columns = 1, len(figures)
+
+    for i, (title, figure) in enumerate(figures.items()):
+        fig.add_subplot(rows, columns, i + 1)
+        plt.imshow(figure)
+        plt.axis('off')
+        plt.title(title)
+
+    plt.show()
