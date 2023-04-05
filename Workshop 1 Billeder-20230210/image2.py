@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 from log_transform import *
+from resize_image import *
 
 # Delopgave 1
 # I denne delopgave skal vi anvende funktionen
@@ -15,17 +16,17 @@ fig = plt.figure(figsize=(10, 7))
 rows, columns = 1, 3
 
 fig.add_subplot(rows, columns, 1)
-plt.imshow(A)
+plt.imshow(A, cmap='gray')
 plt.axis('off')
 plt.title("imshow(A)")
 
 fig.add_subplot(rows, columns, 2)
-plt.imshow(A)
+plt.imshow(A, cmap='gray')
 plt.axis('off')
 plt.title("imshow(A,[])")
 
 fig.add_subplot(rows, columns, 3)
-plt.imshow(log_transform(A, 1/7))
+plt.imshow(log_transform(A, 1/7), cmap='gray')
 plt.axis('off')
 plt.title("imshow(log\_transform(A,1/7))")
 
@@ -47,11 +48,11 @@ rows, columns = 1, 2
 
 fig.add_subplot(rows, columns, 1)
 plt.axis('off')
-plt.imshow(A)
+plt.imshow(A, cmap='gray')
 
 fig.add_subplot(rows, columns, 2)
 plt.axis('off')
-plt.imshow(B)
+plt.imshow(B, cmap='gray')
 
 plt.show()
 
@@ -61,28 +62,28 @@ plt.show()
 # interpolationsmetoder.
 scale = 128
 
-width = int(A.shape[1] * scale / 100)
-height = int(A.shape[0] * scale / 100)
-dim = (width, height)
-print(dim)
+#width = int(A.shape[1] * scale / 100)
+#height = int(A.shape[0] * scale / 100)
+#dim = (width, height)
 
 fig = plt.figure(figsize=(10, 7))
 rows, columns = 1, 3
 
-E = cv2.resize(A, dim, interpolation=cv2.INTER_NEAREST)
+#E = cv2.resize(A, dim, interpolation=cv2.INTER_NEAREST)
+E = resize_image(A, scale, "nearest")
 fig.add_subplot(rows, columns, 1)
 plt.axis('off')
-plt.imshow(E)
+plt.imshow(E, cmap='gray')
 
-E = cv2.resize(A, dim, interpolation=cv2.INTER_LINEAR)
+E = resize_image(A, scale, "linear")
 fig.add_subplot(rows, columns, 2)
 plt.axis('off')
-plt.imshow(E)
+plt.imshow(E, cmap='gray')
 
-E = cv2.resize(A, dim, interpolation=cv2.INTER_CUBIC)
+E = resize_image(A, scale, "cubic")
 fig.add_subplot(rows, columns, 3)
 plt.axis('off')
-plt.imshow(E)
+plt.imshow(E, cmap='gray')
 
 plt.show()
 
@@ -92,23 +93,23 @@ scale = 0.5
 width = int(A.shape[1] * scale)
 height = int(A.shape[0] * scale)
 dim = (width, height)
-print(dim)
+
 fig = plt.figure(figsize=(10, 7))
 rows, columns = 1, 3
 E = cv2.resize(A, dim, interpolation=cv2.INTER_NEAREST)
 fig.add_subplot(rows, columns, 1)
 plt.axis('off')
-plt.imshow(E)
+plt.imshow(E, cmap='gray')
 
 E = cv2.resize(A, dim, interpolation=cv2.INTER_LINEAR)
 fig.add_subplot(rows, columns, 2)
 plt.axis('off')
-plt.imshow(E)
+plt.imshow(E, cmap='gray')
 
 E = cv2.resize(A, dim, interpolation=cv2.INTER_CUBIC)
 fig.add_subplot(rows, columns, 3)
 plt.axis('off')
-plt.imshow(E)
+plt.imshow(E, cmap='gray')
 
 plt.show()
 
@@ -125,16 +126,16 @@ rows, columns = 1, 3
 E = cv2.resize(B, dim, interpolation=cv2.INTER_NEAREST)
 fig.add_subplot(rows, columns, 1)
 plt.axis('off')
-plt.imshow(E)
+plt.imshow(E, cmap='gray')
 
 E = cv2.resize(B, dim, interpolation=cv2.INTER_LINEAR)
 fig.add_subplot(rows, columns, 2)
 plt.axis('off')
-plt.imshow(E)
+plt.imshow(E, cmap='gray')
 
 E = cv2.resize(B, dim, interpolation=cv2.INTER_CUBIC)
 fig.add_subplot(rows, columns, 3)
 plt.axis('off')
-plt.imshow(E)
+plt.imshow(E, cmap='gray')
 
 plt.show()

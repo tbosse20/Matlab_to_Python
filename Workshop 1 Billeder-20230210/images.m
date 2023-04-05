@@ -45,36 +45,36 @@ imshow(E,'InitialMagnification','fit')
 figure
 scale=0.5;
 subplot(1,3,1)
-E=resize_image(A,scale,'nearest');
+%E=resize_image(A,scale,'nearest');
 imshow(E,'InitialMagnification','fit')
 subplot(1,3,2)
-E=resize_image(A,scale,'linear');
+%E=resize_image(A,scale,'linear');
 imshow(E,'InitialMagnification','fit')
 subplot(1,3,3)
-E=resize_image(A,scale,'cubic');
+%E=resize_image(A,scale,'cubic');
 imshow(E,'InitialMagnification','fit')
 
 %Vi kan prøve at gøre noget lignende med B
 scale=3.75;
 figure
 subplot(1,3,1)
-E=resize_image(B,scale,'nearest');
+%E=resize_image(B,scale,'nearest');
 imshow(E,'InitialMagnification','fit')
 subplot(1,3,2)
-E=resize_image(B,scale,'linear');
+%E=resize_image(B,scale,'linear');
 imshow(E,'InitialMagnification','fit')
 subplot(1,3,3)
-E=resize_image(B,scale,'cubic');
+%E=resize_image(B,scale,'cubic');
 imshow(E,'InitialMagnification','fit')
 
 scale=0.73;
 figure
 subplot(1,3,1)
-E=resize_image(B,scale,'nearest');
+%E=resize_image(B,scale,'nearest');
 imshow(E,'InitialMagnification','fit')
 subplot(1,3,2)
-E=resize_image(B,scale,'linear');
+%E=resize_image(B,scale,'linear');
 imshow(E,'InitialMagnification','fit')
 subplot(1,3,3)
-E=resize_image(B,scale,'cubic');
+%E=resize_image(B,scale,'cubic');
 imshow(E,'InitialMagnification','fit')

@@ -67,6 +67,18 @@ function A1=unit_step_row_interpolate(A,new_cols,method)
         %Vi definerer nu variablen s hvor indgangene i hver række svarer
         %svarer til x-x_j i workshoppen.
         s=X-k;
+        
+        %Indsat:
+        s2 = s.*s; 
+        s3 = s2.*s;
+        %.* Gør at det bliver ganget på direkte i stedet for hvordan man normalt
+        %ville gange:
+        %A * B -> [A_11 * B_12 + A_21 * B_12, A_21 * B_22 + A_11 * B_21] 
+        %         [A_22 * B_12 + A_12 * B_11, A_22 * B_22 + A_12 * B_21]
+        %
+        %A .* B -> [A_11 * B_11, A_21 * B_21] 
+        %          [A_12 * B_12, A_22 * B_22]
+
 
         %Vi definerer nu y-koefficienterne. Bemærk at disse er matricer.
         y0=[A(:,1), A(:,1:end-2)];
@@ -90,7 +102,31 @@ function A1=unit_step_row_interpolate(A,new_cols,method)
 
         else
             %Hvis kubisk Hermite interpolation anvendes:
-            error('kubisk Hermite interpolation er endnu ikke implementeret')
+            %error('kubisk Hermite interpolation er endnu ikke implementeret')
+            %Hvis kubisk Hermite interpolation anvendes:
+            if strcmp(method,'cubic')
+                
+                %Vi definerer alpha, beta, gamma og delta, som der er
+                %defineret i del opgave 2.7
+                alpha = -0.5*y0+1.5*y1-1.5*y2+0.5*y3;
+                beta = y0-2.5*y1+2*y2-0.5*y3;
+                gamma = -0.5*y0+0.5*y2;
+                delta = y1;
+                
+                %Vi udvider nu koefficienterne så der er en koefficient til
+                %hver indgang i matricen X.
+                alpha = repelem(alpha,1,repvec);
+                beta = repelem(beta,1,repvec);
+                gamma = repelem(gamma,1,repvec);
+                delta = repelem(delta,1,repvec);
+                
+                %Indangsvis matrix operation
+                A1 = alpha.*s3+beta.*s2+gamma.*s+delta;
+                repvec
+            
+            else
+                error('kubisk Hermite interpolation er endnu ikke implementeret')
+            end
         end   
     
     end
@@ -100,7 +136,8 @@ function A2 = unit_step_column_interpolate(A1,new_rows,method)
 % I denne funktion interpolerer vi søjlerne i matricen A1. Således at
 % hvis A1 er en m x n matrix så er den resulterende matrix A1 en
 % new_rows x n matrix.      
-error('Denne funktion er endnu ikke implementeret')
+%error('Denne funktion er endnu ikke implementeret')
 
+A2 = transpose(unit_step_row_interpolate(transpose(A1),new_rows,method));
 end
 
