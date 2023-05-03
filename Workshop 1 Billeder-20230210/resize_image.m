@@ -122,7 +122,7 @@ function A1=unit_step_row_interpolate(A,new_cols,method)
                 
                 %Indangsvis matrix operation
                 A1 = alpha.*s3+beta.*s2+gamma.*s+delta;
-                repvec
+                
             
             else
                 error('kubisk Hermite interpolation er endnu ikke implementeret')

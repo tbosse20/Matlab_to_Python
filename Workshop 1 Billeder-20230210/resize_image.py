@@ -32,7 +32,7 @@ def unit_step_row_interpolate(A, new_cols, method):
     # Hvis nærmeste nabo interpolation er valgt:
     if method == 'nearest':
         # Indgangene i X afrundes til nærmeste heltal
-        X = np.round(X)
+        X = np.round(X).astype(int)
         # Vi tæller hvor mange gange søjlerne i X gentages
         repvec, _ = np.histogram(X[0, :], bins=np.arange(1, n + 2))
         # Vi gentager søjlerne i A i forhold til hvor mange gange
@@ -53,7 +53,10 @@ def unit_step_row_interpolate(A, new_cols, method):
         # intervallet [j,j+1).
 
         k = np.ones(new_cols)
+        #k = np.ones((1, new_cols))
         repvec = np.zeros(n - 1)
+        #repvec = np.zeros((1, n - 1))
+        print(repvec.shape)
         n_zeros = 0
 
         for j in range(1, n - 1):
@@ -93,6 +96,7 @@ def unit_step_row_interpolate(A, new_cols, method):
             # Vi definerer a og b som de er i delopgave 2 (iii).
             a = y2 - y1
             b = y1
+            
             # Vi udvider nu koefficienterne så der er en
             # koefficient til hver indgang i matricen X.
             a = np.repeat(a, repvec, axis=1)
@@ -123,6 +127,7 @@ def unit_step_row_interpolate(A, new_cols, method):
 
                 # Indangsvis matrix operation
                 A1 = alpha * s3 + beta * s2 + gamma * s + delta
+
             else:
                 raise('kubisk Hermite interpolation er endnu ikke implementeret')
     return A1
