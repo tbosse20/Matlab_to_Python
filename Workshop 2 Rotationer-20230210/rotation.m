@@ -91,6 +91,7 @@ for k =1:n_frames
     %Vi omdanner nu vektorerne i A til kvatanioner ved at sætte deres
     %skalardel lig 0.
     Q=[zeros(1,n*m);A];
+    Q
     %Vi udregner rotationen omkring v vha. kvatanioner
     Q=L*R*Q;
     %Vi omdanner vores roterede kvatanioner til vektorer. Bemærk at vi

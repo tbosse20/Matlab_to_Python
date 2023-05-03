@@ -1,28 +1,29 @@
 ## Hjælpefunktioner
-def left_multiplication2(s, v):
+def left_multiplication0(s, v):
     # Funktion der udregner matricen for venstre
     # multiplikation med kvatanionen [s, v]
     raise('Implementation mangler')
 
-def right_multiplication2(s, v):
+def right_multiplication0(s, v):
     # Funktion der udregner matricen for højre
     # multiplikation med kvatanionen [s, v]
     raise('Implementation mangler')
 
 def left_multiplication(s, v):
+    print(s, v)
     L = [
-        [ s,     -v(1),  -v(2),  -v(3)],
-        [v(1),     s,    -v(3),   v(2)],
-        [v(2),    v(3),    s,    -v(1)],
-        [v(3),   -v(2),   v(1),     s ]
+        [ s,     -v[0],  -v[1],  -v[2]],
+        [v[0],     s,    -v[2],   v[1]],
+        [v[1],    v[2],    s,    -v[0]],
+        [v[2],   -v[1],   v[0],     s ]
     ]
     return L
 
 def right_multiplication(s, v):
     R = [
-        [ s,     -v(1),  -v(2),  -v(3)],
-        [v(1),     s,     v(3),  -v(2)],
-        [v(2),   -v(3),    s,     v(1)],
-        [v(3),    v(2),  -v(1),     s ]
+        [ s,     -v[0],  -v[1],  -v[2]],
+        [v[0],     s,     v[2],  -v[1]],
+        [v[1],   -v[2],    s,     v[0]],
+        [v[2],    v[1],  -v[0],     s ]
     ]
     return R

@@ -96,7 +96,7 @@ def unit_step_row_interpolate(A, new_cols, method):
             # Vi definerer a og b som de er i delopgave 2 (iii).
             a = y2 - y1
             b = y1
-            
+
             # Vi udvider nu koefficienterne så der er en
             # koefficient til hver indgang i matricen X.
             a = np.repeat(a, repvec, axis=1)
