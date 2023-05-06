@@ -8,8 +8,8 @@ import numpy as np
 # I denne opgave skal vi undersøge modellen af Solsystemet som findes i
 # filen "model1.m". Vi kan se modellen ved kalde filnavnet (model1.m
 # ligger i samme mappe som filen solsystem.m
-import model13
-model13.main()
+import model
+model.main()
 
 
 # # Delopgave 1 (v)
@@ -39,7 +39,7 @@ dist = a * trapezreglen(math.sqrt(1 + np.pow(math.e, 2) * np.pow(np.sin(t), 2) -
 # figurer.
 
 # Planet (og Pluto) data
-planet_data = readmatrix('planet_data1.txt')
+planet_data = np.loadtxt('planet_data1.txt')
 planet_names = {'Merkur', 'Venus', 'Jorden', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptun', 'Pluto'}
 planet_colors = {[.75, .75, .75], [1, 0.4, 0.6], [0, 0, 1], [1, 0, 0], [0, 1, 0], [0.7, 0, 0.7], [0.7, 0.7, 0], [0, 0.7, 0.7], [0.5, 0.5, 0.5]}
 # Komet data

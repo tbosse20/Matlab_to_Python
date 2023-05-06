@@ -58,12 +58,17 @@ class Comet:
         M = self.mod_M(M)
         estar = 180 / np.pi * self.e
         # Calculate initial guess for Newtons method
-        E_0 = M + estar * sind(M)
+        E_0 = M + estar * np.sin(M)
         # Apply Newtons method
-        E = newtons_method(E_0, @ (E) E - estar * np.sin(np.radians(E)) - M, @(E) 1 - self.e * cosd(E), 10 ^ (-6))
+        E = newtons_method(
+            E_0, @ (E) E - estar * np.sin(np.radians(E)) - M,
+            @(E) 1 - self.e * np.cos(E), 10 ^ (-6)
+        )
         # Update coordinates.
-        self.coordinates = [self.a * (cosd(E) - self.e), self.a * np.sqrt(1 - self.e ^ 2) * sind(E)]
-        '
+        self.coordinates = [
+            self.a * (np.cos(E) - self.e),
+            self.a * np.sqrt(1 - self.e ^ 2) * np.sin(E)
+        ]
         if not self.ball: self.make_ball()
         else: self.update_ball()
 

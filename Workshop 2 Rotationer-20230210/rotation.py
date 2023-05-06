@@ -36,9 +36,12 @@ A = [np.ravel(X), np.ravel(Y), np.ravel(Z)]
 fig = plt.figure()
 ax = fig.add_subplot(projection='3d')
 ax.set_box_aspect([1, 1, 1])
+ax.set_xlim([-2, 2])
+ax.set_ylim([-2, 2])
+ax.set_zlim([-2, 2])
 ax.view_init(30, 45)
 ax.plot_surface(X, Y, Z)
-#plt.show()
+plt.show()
 
 ## Opgave (i)
 # I denne opgave skal vi roterere kuglen så den
@@ -73,9 +76,12 @@ Z = A[2].reshape([m, n])
 fig = plt.figure()
 ax = fig.add_subplot(projection='3d')
 ax.set_box_aspect([1, 1, 1])
+ax.set_xlim([-2, 2])
+ax.set_ylim([-2, 2])
+ax.set_zlim([-2, 2])
 ax.view_init(30, 45)
 ax.plot_surface(X, Y, Z)
-#plt.show()
+plt.show()
 
 
 ## Opgave (ii)
@@ -101,23 +107,11 @@ n_frames = fps * seconds
 fig = plt.figure(figsize=(6, 8))
 ax = fig.add_subplot(111, projection='3d')
 ax.set_box_aspect([1, 1, 1])
-ax.set_xlim3d([-2, 2])
-ax.set_ylim3d([-2, 2])
-ax.set_zlim3d([-2, 2])
 ax.view_init(30, 45)
-#ax.set_xticks([])
-#ax.set_yticks([])
-#ax.set_zticks([])
-
-# (Bemærk at der ikke er grund til at se hvert
-# plot så vi gør figuren usynlig.
-# Vi laver nu et videoobjekt)
-
-ax.plot_surface(X, Y, Z, color='lightblue')
 
 # Nedenstående loop laver de frames der
 # skal indgå i animationen.
-def update(k, X, Y, Z):
+def update(k):
     # Vi ønsker en enkelt rotation så vi
     # sætter vinklen vi roterer jorden
     # med i frame k til at være
@@ -171,9 +165,8 @@ def update(k, X, Y, Z):
     ax.set_zticks([])
 
 ani = animation.FuncAnimation(
-    fig, update, frames=n_frames, fargs=(X, Y, Z),
-    interval=1000/fps, repeat=True)
-plt.show()
+    fig, update, frames=n_frames,
+    interval=1000/fps)
 
-writer = animation.FFMpegWriter(fps=fps)
-ani.save('rotation.mp4', writer=writer)
+writer = animation.PillowWriter(fps=30)
+ani.save('animation.gif', writer=writer)

@@ -3,23 +3,9 @@ import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib.animation as animation
 import matplotlib.patches as patches
+from Planet import Planet
 
 # https://nickcharlton.net/posts/drawing-animating-shapes-matplotlib.html
-
-
-class Planet:
-    def __init__(self, name, ax, addx, ay, addy, movement, r, res, color):
-        self.name = name
-        self.ax = ax
-        self.kx = addx
-        self.ay = ay
-        self.ky = addy
-        self.movement = movement
-        self.r = r
-        self.res = res
-        self.color = color
-
-
 class System:
     t = 10000 * random.random()
     ax = plt.gca()
@@ -62,26 +48,24 @@ def main():
     print('Tak fordi du spillede!')
 
 
+
 def btn(event):
     size = zoom = 1
 
-    match event.key:
-
-        case ' ':
-            system.moving = 1 - system.moving
-            if system.moving: system.anim.resume()
-            else: system.anim.pause()
-
-        case 'up':      zoom = 0.5
-        case 'down':    zoom = 2
-        case 'q':       exit()
-        case 'tab':     system.moving = 2
-        case 'left':    size = 0.5
-        case 'right':   size = 2
-        case ',':       system.v *= 0.5
-        case '.':       system.v *= 2
-        case 't':       system.textvisible = 1 - system.textvisible
-        case _:         print(f'{event.key=}')  # show key info
+    if event.key == ' ':
+        system.moving = 1 - system.moving
+        if system.moving: system.anim.resume()
+        else: system.anim.pause()
+    elif event.key == 'up':     zoom = 0.5
+    elif event.key == 'down':   zoom = 2
+    elif event.key == 'q':      exit()
+    elif event.key == 'tab':    system.moving = 2
+    elif event.key == 'left':   size = 0.5
+    elif event.key == 'right':  size = 2
+    elif event.key == ',':      system.v *= 0.5
+    elif event.key == '.':      system.v *= 2
+    elif event.key == 't':      system.textvisible = 1 - system.textvisible
+    else: print(f'{event.key=}')  # show key info
 
     if event.key == "up" or event.key == "down":
         system.xmax *= zoom

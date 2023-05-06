@@ -23,6 +23,7 @@ properties
     methods 
         function obj=Comet(name,color,comet_data)
             %Constructor
+            nargin
             if nargin>0
                 obj.name=name;
                 obj.color=color;

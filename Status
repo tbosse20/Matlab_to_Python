@@ -3,13 +3,13 @@ Workshop 1
 to the mathlab code. Figure out what is wrong..
 
 Workshop 2
-Just figured out how to make an animation.
-- Check if it is correct.
-- Save it as a mp4 file.
+- Make line showing rotation angle
 (Is RotationNull.py being used?)
 
 Workshop 3
--
+- Check if model.py is complete
+- Check if model1 and model12 are being used
+- Translate the "solar_system" file
 
 Workshop 4
--
+- Check how "positions" work in Mathlab code
