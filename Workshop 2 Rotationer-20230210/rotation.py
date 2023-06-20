@@ -1,7 +1,55 @@
 import numpy as np
 from matplotlib import pyplot as plt
-from Hjaelpefunktioner import *
 import matplotlib.animation as animation
+from matplotlib import cm
+
+
+## Hjælpefunktioner
+def make_figure():
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='3d')
+    ax.set_box_aspect([1, 1, 1])
+    lim = 2
+    ax.set_xlim([-lim, lim]), ax.set_ylim([-lim, lim]), ax.set_zlim([-lim, lim])
+    ax.view_init(elev=30, azim=60)
+    return fig, ax
+
+
+def sphere():
+    # https://www.tutorialspoint.com/plotting-points-on-the-surface-of-a-sphere-in-python-s-matplotlib
+
+    u, v = np.mgrid[0:2 * np.pi:21j, 0:np.pi:21j]
+    x = np.cos(u) * np.sin(v)
+    y = np.sin(u) * np.sin(v)
+    z = np.cos(v)
+    return [x, y, z]
+
+
+def left_multiplication(s, v):
+    # Funktion der udregner matricen for venstre
+    # multiplikation med kvatanionen [s, v]
+    # TODO: raise ('Implementation mangler')
+    L = [
+        [s, -v[0], -v[1], -v[2]],
+        [v[0], s, -v[2], v[1]],
+        [v[1], v[2], s, -v[0]],
+        [v[2], -v[1], v[0], s]
+    ]
+    return L
+
+
+def right_multiplication(s, v):
+    # Funktion der udregner matricen for højre
+    # multiplikation med kvatanionen [s, v]
+    # TODO: raise ('Implementation mangler')
+    R = [
+        [s, -v[0], -v[1], -v[2]],
+        [v[0], s, v[2], -v[1]],
+        [v[1], -v[2], s, v[0]],
+        [v[2], v[1], -v[0], s]
+    ]
+    return R
+
 
 ## Introduktion
 # I denne Python-fil skal vi lave en
@@ -32,13 +80,7 @@ A = [np.ravel(X), np.ravel(Y), np.ravel(Z)]
 #       Z = A[2].reshape([m, n])
 
 # Man kan plotte kuglen med kommandoen
-fig = plt.figure()
-ax = fig.add_subplot(projection='3d')
-ax.set_box_aspect([1, 1, 1])
-ax.set_xlim([-2, 2])
-ax.set_ylim([-2, 2])
-ax.set_zlim([-2, 2])
-ax.view_init(30, 45)
+fig, ax = make_figure()
 ax.plot_surface(X, Y, Z)
 plt.show()
 
@@ -59,9 +101,9 @@ cos = np.cos(theta)
 # roterer med en vinkel theta omkring y-aksen
 R = 0000
 R = [
-    [cos,  0,  sin],
-    [ 0,   1,   0 ],
-    [-sin, 0,  cos],
+    [cos, 0, sin],
+    [0, 1, 0],
+    [-sin, 0, cos],
 ]
 
 # Roter punkterne på kuglen
@@ -72,16 +114,12 @@ X = A[0].reshape([m, n])
 Y = A[1].reshape([m, n])
 Z = A[2].reshape([m, n])
 
-fig = plt.figure()
-ax = fig.add_subplot(projection='3d')
-ax.set_box_aspect([1, 1, 1])
-ax.set_xlim([-2, 2])
-ax.set_ylim([-2, 2])
-ax.set_zlim([-2, 2])
-ax.view_init(30, 45)
-ax.plot_surface(X, Y, Z)
+# Calculate the colors for each point on the sphere
+# colors = np.zeros_like(x)
+# colors = (u - np.min(u)) / (np.max(u) - np.min(u))
+fig, ax = make_figure()
+ax.plot_surface(X, Y, Z, shade=True)
 plt.show()
-
 
 ## Opgave (ii)
 # Vi skal i denne opgave bestemme en enhedsvektor
@@ -103,10 +141,8 @@ fps, seconds = 60, 3
 n_frames = fps * seconds
 
 # Vi laver nu figuren vi skal plotte i
-fig = plt.figure(figsize=(6, 8))
-ax = fig.add_subplot(111, projection='3d')
-ax.set_box_aspect([1, 1, 1])
-ax.view_init(30, 45)
+fig, ax = make_figure()
+
 
 # Nedenstående loop laver de frames der
 # skal indgå i animationen.
@@ -128,9 +164,9 @@ def update(k):
     # right_multiplication til at definere
     # passende matricer til at udregne
     # rotationen qpq^(-1) hvor q=[s,lambda*v]
-    #L = left_multiplication(0000, 0000)
+    # L = left_multiplication(0000, 0000)
     L = left_multiplication(s, l * v)
-    #R = right_multiplication(0000, 0000)
+    # R = right_multiplication(0000, 0000)
     R = right_multiplication(s, -l * v)
 
     # Vi omdanner nu vektorerne i A til kvatanioner
@@ -152,20 +188,28 @@ def update(k):
     # Bemærk at det er hurtigere i Matlab at
     # plotte kuglen første gang og efterfølgende
     # bare opdatere plottets indhold.
+    ax.clear()
+
+    # https://stackoverflow.com/questions/49325704/unexpected-constant-color-using-matplotlib-surface-plot-and-facecolors
+    phi = np.linspace(0, 2 * np.pi, 50)
+    theta = np.linspace(0, np.pi, 25)
+    PHI = np.outer(phi, np.ones(np.size(theta)))
+    data = PHI / np.pi
+    norm = plt.Normalize(vmin=data.min(), vmax=data.max())
+    ax.plot_surface(X, Y, Z, facecolors=cm.jet(norm(data)))
 
     # Vi plotter rotationsaksen
-    ax.clear()
-    ax.plot_surface(X, Y, Z, color='b')
-    ax.set_xlim([-2, 2])
-    ax.set_ylim([-2, 2])
-    ax.set_zlim([-2, 2])
-    ax.set_xticks([])
-    ax.set_yticks([])
-    ax.set_zticks([])
+    x = [-2 * v[0], 2 * v[0]]
+    y = [-2 * v[1], 2 * v[1]]
+    z = [-2 * v[2], 2 * v[2]]
+    ax.plot(x, y, z, color='red')
+
+    print(f'\rSaving gif ..', end='')
+
 
 ani = animation.FuncAnimation(
     fig, update, frames=n_frames,
-    interval=1000/fps)
+    interval=1000 / fps)
 
 writer = animation.PillowWriter(fps=30)
 ani.save('animation.gif', writer=writer)
