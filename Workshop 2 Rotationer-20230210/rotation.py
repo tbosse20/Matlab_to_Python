@@ -1,6 +1,5 @@
 import numpy as np
 from matplotlib import pyplot as plt
-from sphere import *
 from Hjaelpefunktioner import *
 import matplotlib.animation as animation
 
