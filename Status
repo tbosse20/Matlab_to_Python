@@ -12,4 +12,4 @@ Workshop 3
 - Translate the "solar_system" file
 
 Workshop 4
-- Working on "ball_collision_update" in "Model.py"
+- "slope2 = (u2[1] - u1[1]) / (u2[0] - u1[0])" not working in "Model.py"
