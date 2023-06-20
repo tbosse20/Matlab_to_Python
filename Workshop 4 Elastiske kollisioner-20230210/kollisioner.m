@@ -7,7 +7,7 @@
 %% Eksempel 1.
 clf
 rng('default')
-nballs=12;
+nballs=5;
 nsides=4;
 A=Model(nsides,nballs,'equal');
 A.run()

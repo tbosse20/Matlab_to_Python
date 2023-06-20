@@ -7,7 +7,7 @@ from Model import Model
 #kuglerne i et spil billiard.
 
 ## Eksempel 1.
-nballs = 12
+nballs = 5
 nsides = 4
 A = Model(nsides, nballs, 'equal')
 A.run()

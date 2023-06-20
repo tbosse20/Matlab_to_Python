@@ -32,7 +32,9 @@ classdef Container<handle
         
         function in = in_container(obj,x)
             %afgører om søjlerne i x er indenfor beholderen
+            
             in=inpolygon(x(1,:),x(2,:),obj.vertices(1,:),obj.vertices(2,:));
+            
         end
         function hatvec=normal_hat(obj,x)
             %normaliseret hatvektor
@@ -50,11 +52,18 @@ classdef Container<handle
         function [dist,idx]=dist_to_boundary(obj,x)
             %Udregner afstanden fra x til kanterne i beholderen. Se også
             %delopgave 4
+            
+            
             m=length(x(1,:));
+            
             x=kron(x,ones(1,obj.n));
+            
             x_0=repmat(obj.vertices(:,1:end-1),[1,m]);
+            
             normals=repmat(obj.normals,[1,m]);
+            
             dist=dot(normals,x-x_0);
+            
         end
         
         function plot_container(obj)

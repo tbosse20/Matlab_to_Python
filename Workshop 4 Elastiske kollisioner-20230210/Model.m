@@ -125,12 +125,18 @@ classdef Model<handle
                         ball_idx=i+find(ball_collisions);
                         u=positions(:,ball_idx)-position;
                         v=velocities(:,ball_idx)-velocity;
+                        
+                        
                         udotv=dot(u,v);
                         vv=dot(v,v);
                         uu=dot(u,u);
+                        udotv
+                        vv
+                        uu
                         r=radii(ball_idx)+radius;
                         time_of_collisions=dt-(udotv+sqrt(udotv.^2-vv.*(uu-r.^2)))./vv;
                         [time,idx]=min(time_of_collisions);
+                        min(time_of_collisions)
                         if time<first_collision(3)
                             first_collision=[i,ball_idx(idx),time];
                         end
@@ -263,6 +269,9 @@ classdef Model<handle
                 collisions=0;
             else
                 dists=vecnorm(positions-position);
+                
+                
+                
                 collisions=dists<=radii+radius;
             end
         end
@@ -277,7 +286,9 @@ classdef Model<handle
         end
         
         function bool = is_collision(obj,position,radius,positions,radii)
-            if nnz(obj.ball_collisions(position,radius,positions,radii))>0 || nnz(obj.edge_collisions(position,radius))>0
+            d0 = obj.ball_collisions(position,radius,positions,radii);
+            w0 = obj.edge_collisions(position,radius);
+            if nnz(d0) > 0 || nnz(w0) > 0
                 bool=1;
             else
                 bool=0;
@@ -305,9 +316,11 @@ classdef Model<handle
                     radius=min_r+rand()*(max_r-min_r);
                 end
                 number_of_tries=number_of_tries+1;
+                
                 if ~obj.is_collision(position,radius,positions(:,1:balls_generated),radii(1:balls_generated) ) &&nnz(obj.container.in_container(position))>0
                     positions(:,balls_generated+1)=position;
                     radii(balls_generated+1)=radius;
+                    
                     balls_generated=balls_generated+1;
                     number_of_tries=0;
                 end
