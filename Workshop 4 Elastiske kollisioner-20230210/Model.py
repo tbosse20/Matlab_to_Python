@@ -19,6 +19,7 @@ class Model:
         # antal bolde i beholderen. Dette gøres tilfældigt.
 
         fig, ax = plt.subplots()
+        fig.canvas.mpl_connect('key_press_event', lambda event: self.buttonpush(event))
         ax.set_xlim(-1, 1)
         ax.set_ylim(-1, 1)
         self.fig, self.ax = fig, ax
@@ -26,19 +27,19 @@ class Model:
         self.container = Container(ngon, self.ax)
         self.nballs = nballs
         self.balls = self.make_balls(nballs, option)
-        # set(gcf, 'WindowKeyPressFcn', @ self.buttonpush)
-        self.text = plt.text(0.4, 1,
-                             'q: afslut\n'
-                             'mellemrum: pause/genoptag\n'
-                             'piletaster op/ned: skalér hastighed\n'
-                             't: tekster til/fra', verticalalignment='top')
+        self.text = plt.text(
+            0.4, 1,
+            'q: afslut\n'
+            'mellemrum: pause/genoptag\n'
+            'piletaster op/ned: skalér hastighed\n'
+            't: tekster til/fra',
+            verticalalignment='top')
 
     def make_balls(self, nballs, option):
         # tilfældig generation af et antal bolde.
         balls = [None] * nballs  # balls = cell(1, nballs)
         # Generer hastighederne
         velocities = np.random.uniform(low=-5, high=5, size=(2, nballs))
-        print(velocities)
         # Generer boldene, med radius og proportionelle masser:
         [positions, radii, masses] = self.generate_positions_and_radii(option)
         for i in range(nballs):
@@ -52,7 +53,7 @@ class Model:
         self.playing = 1
         while self.playing == 1:
             if self.paused:
-                time.sleep(0.01)
+                plt.pause(0.01)
                 continue
 
             self.update(self.dt)
@@ -64,7 +65,7 @@ class Model:
         # t afhængigt af antallet af kollisioner.
         new_time = self.collision_detection(t)
         self.update_positions(new_time)
-        plt.pause(t)
+        plt.pause(new_time)
 
     def update_positions(self, t):
         for ball in self.balls:
@@ -78,9 +79,9 @@ class Model:
         # Find første kollision i tidstrinnet dt.
         new_time = dt
         first_collision = [0, 0, dt]
-        positions = self.get_positions_at_time_step(range(self.nballs), dt)
+        positions = self.get_positions_at_time_step(self.balls, dt)
         radii = self.get_radii(range(self.nballs))
-        velocities = self.get_velocities(range(self.nballs))
+        velocities = self.get_velocities(self.balls)
 
         # Hvis hastighederne er store kan vi risikere
         # at bolde kan ryge ud af beholderen eller
@@ -89,8 +90,8 @@ class Model:
         pass_through = False
         for i in range(self.nballs - 1):
             for j in range(i + 1, self.nballs):
-                x1, x2 = self.balls[i].position.reshape((2,)), positions[:, i]
-                u1, u2 = self.balls[j].position.reshape((2,)), positions[:, j]
+                x1, x2 = self.balls[i].position.reshape((2,)), positions[:, i].reshape((2,))
+                u1, u2 = self.balls[j].position.reshape((2,)), positions[:, j].reshape((2,))
                 if self.pass_through(x1, x2, u1, u2):
                     pass_through = True
                     break
@@ -120,31 +121,19 @@ class Model:
                 # Hvis der er bolde der kolliderer udregner vi de eksakte tidspunkter.
                 n_collisions = np.count_nonzero(ball_collisions)
                 if n_collisions > 0:
-                    ball_idx = i + np.flatnonzero(ball_collisions)
-                    print(f'{positions=}')
-                    print(f'{position=}')
-                    print(f'{velocities=}')
-                    print(f'{velocity=}')
+                    ball_idx = i + np.flatnonzero(ball_collisions)[0] + 1
                     u = positions[:, ball_idx] - position.reshape((2,))
                     v = velocities[:, ball_idx] - velocity.reshape((2,))
-                    print(f'{u=}')
-                    print(f'{v=}')
-                    u = u.reshape((2,1))
-                    v = v.reshape((2,1))
-                    udotv = np.dot(u.T, v)
-                    vv = np.dot(v.T, v)
-                    uu = np.dot(u.T, u)
-                    print(f'{udotv=}')
-                    print(f'{vv=}')
-                    print(f'{uu=}')
+                    u = u.reshape((2, 1))
+                    v = v.reshape((2, 1))
+                    udotv = np.dot(u.T, v)[0][0]
+                    vv = np.dot(v.T, v)[0][0]
+                    uu = np.dot(u.T, u)[0][0]
                     r = radii[ball_idx] + radius
                     d = np.sqrt(udotv ** 2 - vv * (uu - r ** 2))
                     time_of_collisions = dt - (udotv + d) / vv
-                    # [time, idx] = min(time_of_collisions)
-                    time = min(time_of_collisions)
-                    if time < first_collision[2]:
-                        first_collision = [i, ball_idx, time]
-                        # first_collision = [i, ball_idx[idx], time]
+                    if time_of_collisions < first_collision[2]:
+                        first_collision = [i, ball_idx, time_of_collisions]
 
                 # Vi udregner de eksakte tidspunkter for kollisioner med beholderen.
                 [edge_collisions, edge_idx, edge_dists] = self.edge_collisions(position, radius)
@@ -152,15 +141,12 @@ class Model:
 
                 if n_collisions > 0:
                     n = self.container.normals[:, edge_idx].reshape((2, 1))
-                    vel = np.tile(velocity, (n[0].size, 1)).reshape((2, 1)).T
-                    time_of_collisions = dt - (edge_dists + radius) / np.dot(n, vel).flatten()
+                    vel = np.tile(velocity, (n[0].size, 1)).reshape((2, 1))
+                    time_of_collisions = dt - (edge_dists + radius) / np.dot(n.T, vel).flatten()
                     time = min(time_of_collisions)
-                    idx = np.where(time_of_collisions == time)
                     if time < first_collision[2]:
                         first_collision = [i, -edge_idx, time]
-                        # first_collision = [i, -edge_idx[idx], time]
 
-            print(f'{first_collision=}')
             # Updater positionerne til første kollision og opdater hastighedvektorerne for de involverede selfekter.
             if first_collision[2] < dt:
                 self.update_positions(first_collision[2])
@@ -187,41 +173,37 @@ class Model:
         # opdater hastighederne på bold ball1_idx og ball2_idx efter # deres kollision.Bemærk at der her bruges teorien om elastiske
         # kollisioner fra delopgave 4
 
-        mass1 = self.balls[ball1_idx].mass
-        position1 = self.balls[ball1_idx].position
-        velocity1 = self.balls[ball1_idx].velocity.reshape((2,1))
+        ball1: Ball = self.balls[ball1_idx]
+        mass1 = ball1.mass
+        position1 = ball1.position.reshape((2, 1))
+        velocity1 = ball1.velocity.reshape((2, 1))
 
-        mass2 = self.balls[ball2_idx].mass
-        position2 = self.balls[ball2_idx].position
-        velocity2 = self.balls[ball2_idx].velocity.reshape((2,1))
+        ball2: Ball = self.balls[ball2_idx]
+        mass2 = ball2.mass
+        position2 = ball2.position.reshape((2, 1))
+        velocity2 = ball2.velocity.reshape((2, 1))
 
         position_difference = position2 - position1
         velocity_difference = velocity2 - velocity1
         normal_vector = position_difference / np.linalg.norm(position_difference)
-        projection = np.dot(velocity_difference, normal_vector) * normal_vector
+        projection = np.dot(velocity_difference.T, normal_vector) * normal_vector
         velocity1 = velocity1 + 2 * mass2 / (mass1 + mass2) * projection
         velocity2 = velocity2 - 2 * mass1 / (mass1 + mass2) * projection
 
-        # TODO: Check why velocity becomes (2, 2) and not (2, 1)
-        print(f'{velocity1=}')
-        print(f'{velocity2=}')
-        self.balls[ball1_idx].velocity = velocity1.reshape((2,))
-        self.balls[ball2_idx].velocity = velocity2.reshape((2,))
+        ball1.velocity = velocity1.reshape((2,))
+        ball2.velocity = velocity2.reshape((2,))
 
         return self
 
-    def get_velocities(self, idx):
-        velocities = np.zeros((2, len(idx)))
-        counter = 0
-        for i in idx:
-            velocities[:, counter] = self.balls[i].velocity
-            counter += 1
+    def get_velocities(self, balls):
+        velocities = np.zeros((2, len(balls)))
+        for counter, ball in enumerate(balls):
+            velocities[:, counter] = ball.velocity.reshape((2,))
         return velocities
 
-    def get_positions_at_time_step(self, idx, dt):
-        positions = np.zeros((2, len(idx))).reshape(2, len(idx))
-        for counter in idx:
-            ball: Ball = self.balls[counter]
+    def get_positions_at_time_step(self, balls, dt):
+        positions = np.zeros((2, len(balls))).reshape(2, len(balls))
+        for counter, ball in enumerate(balls):
             positions[:, counter] = ball.get_position_at_time_step(dt)
         return positions
 
@@ -230,22 +212,18 @@ class Model:
         # hinanden.Dette sker kun ved meget store hastigheder og små
         # bolde.Funktionen ser om der er en skæring i de to baner som
         # boldene følger.
-        bool = 0
         sort1 = np.sort([x1, x2], axis=1)
         sort2 = np.sort([u1, u2], axis=1)
-        x_min = sort1[0, 0]
-        x_max = sort1[0, 1]
-        y_min = sort1[1, 0]
-        y_max = sort1[1, 1]
-        u_min = sort2[0, 0]
-        u_max = sort2[0, 1]
-        v_min = sort2[1, 0]
-        v_max = sort2[1, 1]
 
-        x_min = max([x_min, u_min])
-        x_max = min([x_max, u_max])
-        y_min = max([y_min, v_min])
-        y_max = min([y_max, v_max])
+        x_min, x_max = sort1[0, 0], sort1[0, 1]
+        y_min, y_max = sort1[1, 0], sort1[1, 1]
+        u_min, u_max = sort2[0, 0], sort2[0, 1]
+        v_min, v_max = sort2[1, 0], sort2[1, 1]
+
+        x_min, x_max = max([x_min, u_min]), min([x_max, u_max])
+        y_min, y_max = max([y_min, v_min]), min([y_max, v_max])
+        # print(x1, x2, u1, u2)
+        # print((x2[1] - x1[1]), (x2[0] - x1[0]))
 
         slope1 = (x2[1] - x1[1]) / (x2[0] - x1[0])
         slope2 = (u2[1] - u1[1]) / (u2[0] - u1[0])
@@ -255,8 +233,8 @@ class Model:
             y = slope1 * (x - x1[0]) + x1[1]
             if x_min <= x and x <= x_max and \
                     y_min <= y and y <= y_max:
-                bool = 1
-        return bool
+                return 1
+        return 0
 
     def get_radii(self, idx):
         radii = np.zeros(len(idx))
@@ -273,14 +251,7 @@ class Model:
         else:
             position = np.reshape(position, (2, 1))
             dists = np.linalg.norm(positions - position, axis=0)
-            # print(dists)
-            # print(radii)
-            # print(radius)
-            # print(dists, radii + radius)
-            # print(dists <= radii + radius)
-            # print()
-            collisions = dists <= radii + radius
-            # print(f'{collisions=}')
+            collisions = (dists <= radii + radius).astype(int)
         return collisions
 
     def edge_collisions(self, position, radius):
@@ -289,8 +260,7 @@ class Model:
         dists, _ = self.container.dist_to_boundary(position)
         collisions = np.absolute(dists) < radius
         edge_idx = np.where(collisions == True)[0]
-        if len(edge_idx) > 0:
-            edge_idx = edge_idx[0]
+        if np.any(edge_idx): edge_idx = edge_idx.tolist()[0]
         dists = dists[edge_idx]
         return [collisions, edge_idx, dists]
 
@@ -339,29 +309,20 @@ class Model:
         return [positions, radii, masses]
 
     def show_hide_text(self):
-        if self.show_text == 1:
-            self.text.visible = True
-            for ball in self.balls:
-                ball.text.visible = True
+        self.show_text = not self.show_text
+        self.text.set_visible(self.show_text)
+        for ball in self.balls:
+            ball.text.set_visible(self.show_text)
 
-        else:
-            self.text.visible = True
-            for ball in self.balls:
-                ball.text.visible = True
-
-    def buttonpush(self, src, ed):
+    def buttonpush(self, ed):
         # Håndterer keyboard input.
         if ed.key == 'q':
             self.playing = 0
-        elif ed.key == 'space':
+        elif ed.key == ' ':
             self.paused = not self.paused
-        elif ed.key == 'uparrow':
+        elif ed.key == 'up':
             self.scale_velocities(2)
-        elif ed.key == 'downarrow':
+        elif ed.key == 'down':
             self.scale_velocities(0.5)
         elif ed.key == 't':
-            self.show_text = not self.show_text
             self.show_hide_text()
-
-if __name__ == "__main__":
-    pass

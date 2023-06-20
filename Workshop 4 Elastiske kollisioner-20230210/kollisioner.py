@@ -6,21 +6,25 @@ from Model import Model
 #beholder. Dette er sammenligneligt med molekylerne i en gas,  eller
 #kuglerne i et spil billiard.
 
+run_example = 1
+
 ## Eksempel 1.
-nballs = 5
-nsides = 4
-A = Model(nsides, nballs, 'equal')
-A.run()
+if run_example == 1:
+    nballs = 12
+    nsides = 4
+    A = Model(nsides, nballs, 'equal')
+    A.run()
 
 ## Eksempel 2.
-
-nballs = 20
-nsides = 100
-A = Model(nsides, nballs, '')
-A.run()
+if run_example == 2:
+    nballs = 20
+    nsides = 100
+    A = Model(nsides, nballs, '')
+    A.run()
 
 ## Eksempel 3
-nballs = 3
-nsides = 5
-A = Model(nsides, nballs, '')
-A.run()
+if run_example == 3:
+    nballs = 3
+    nsides = 5
+    A = Model(nsides, nballs, '')
+    A.run()
