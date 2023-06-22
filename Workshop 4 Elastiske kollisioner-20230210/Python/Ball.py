@@ -36,7 +36,6 @@ class Ball:
         x_points = np.add(self.position[0], np.multiply(self.radius, np.cos(t)))
         y_points = self.position[1] + self.radius * np.sin(t)
         circle_points = np.stack((x_points, y_points), axis=1)
-        print(circle_points.shape)
         return circle_points
 
 if __name__ == "__main__":

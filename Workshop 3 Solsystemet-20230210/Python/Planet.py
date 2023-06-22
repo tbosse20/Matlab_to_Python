@@ -1,8 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from newtons_method import newtons_method
+from SuperPlanet import SuperPlanet
 
-class Planet:
+class Planet(SuperPlanet):
     # PLANET Class. Based on the method of https://ssd.jpl.nasa.gov/txt/aprx_pos_planets.pdf
 
     t = 0  # Tid
@@ -52,40 +53,13 @@ class Planet:
         # We calculate the coordinates of the planet at time t.
         self.coordinates = np.array([a * (np.cos(E) - e), a * np.sqrt(1 - e ** 2) * np.sin(E)])
         if hasattr(self, "ball"):
-            self.update_planet()
+            self.update_ball()
         else:
-            self.make_planet()
-
-    def make_circle(self):
-        t = np.linspace(0, 2 * np.pi, self.resolution)
-        circle = self.radius * np.array([np.cos(t), np.sin(t)])
-        circle += self.coordinates[:, np.newaxis]
-        return circle.T
-
-    def make_planet(self):
-        circle = self.make_circle()
-        self.ball = plt.Polygon(circle, color=self.color)
-        if self.ax: self.ax.add_patch(self.ball)
-        self.text = plt.text(self.coordinates[0], self.coordinates[1], self.name)
-        trace = np.tile(self.coordinates[:, np.newaxis], (1, self.trace_length))
-        self.trace, = plt.plot(trace[0], trace[1])
-
-    def update_planet(self):
-        circle = self.make_circle()
-        self.ball.set_xy(circle)
-        self.text.set_position(self.coordinates)
-        trace_x = [self.coordinates[0], *self.trace.get_xdata()[:-1]]
-        trace_y = [self.coordinates[1], *self.trace.get_ydata()[:-1]]
-        self.trace.set_data(trace_x, trace_y)
+            self.make_ball()
 
     def time_converter(self, t):
         # Method for converting t to Julian Ephemeris Date and then to
-        # centuries past J2000 .0.This is because of the available data.
+        # centuries past J2000.0. This is because of the available data.
         t = (2816788 - 625674) * (t + 3001) / (3000 + 3001) + 625674
         t = (t - 2451545) / 36525
         return t
-
-    def mod_M(self, M):
-        # Convert M to a value between - 180 deg and 180 deg.
-        M = np.mod(M, 360) - 360 * (np.mod(M, 360) >= 180)
-        return M

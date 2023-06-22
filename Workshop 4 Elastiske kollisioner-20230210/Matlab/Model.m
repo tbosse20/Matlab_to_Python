@@ -129,12 +129,7 @@ classdef Model<handle
                         vv=dot(v,v);
                         uu=dot(u,u);
                         r=radii(ball_idx)+radius;
-                        udotv
-                        vv
-                        uu
-                        r
                         time_of_collisions=dt-(udotv+sqrt(udotv.^2-vv.*(uu-r.^2)))./vv;
-                        time_of_collisions
                         [time,idx]=min(time_of_collisions);
                         if time<first_collision(3)
                             first_collision=[i,ball_idx(idx),time];
@@ -240,7 +235,10 @@ classdef Model<handle
             x_max=min([x_max,u_max]);
             y_min=max([y_min,v_min]);
             y_max=min([y_max,v_max]);
-            x2(1)-x1(1)
+            % x2(1)-x1(1)
+            if (x2(1)-x1(1) == 0.0)
+                "AD"
+            end
             slope1=(x2(2)-x1(2))/(x2(1)-x1(1));
             slope2=(u2(2)-u1(2))/(u2(1)-u1(1));
             

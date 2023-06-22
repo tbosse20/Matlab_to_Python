@@ -2,9 +2,9 @@ import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib.patches as patches
 from newtons_method import *
+from SuperPlanet import SuperPlanet
 
-
-class Comet:
+class Comet(SuperPlanet):
     # COMET Class. Uses the data from https://ssd.jpl.nasa.gov/sbdb.cgi?sstr = 1P
     coordinates = [0, 0]
     resolution = 200
@@ -51,37 +51,7 @@ class Comet:
         else:
             self.make_ball()
 
-    def make_circle(self):
-        # Create circle in Python: matplotlib.patches.Circle(position, radius, color)
-
-        t = np.linspace(0, 2 * np.pi, self.resolution)
-        x_points = np.add(self.coordinates[0], np.multiply(self.radius, np.cos(t)))
-        y_points = self.coordinates[1] + self.radius * np.sin(t)
-        circle_points = np.stack((x_points, y_points), axis=1)
-        return circle_points
-
-    def make_ball(self):
-        circle_points = self.make_circle()
-        self.ball = plt.Polygon(circle_points, self.color)
-        if self.ax: self.ax.add_patch(self.ball)
-        self.text = plt.text(self.coordinates[0], self.coordinates[1], self.name)
-        trace = np.tile(self.coordinates[:, np.newaxis], (1, self.trace_length))
-        self.trace, = plt.plot(trace[0], trace[1])
-
-    def update_ball(self):
-        circle_points = self.make_circle()
-        self.ball.set_xy(circle_points)
-        self.text.set_position(self.coordinates)
-        trace_x = [self.coordinates[0], *self.trace.get_xdata()[:-1]]
-        trace_y = [self.coordinates[1], *self.trace.get_ydata()[:-1]]
-        self.trace.set_data(trace_x, trace_y)
-
     def time_converter(self, t):
         # Convert time t to Julian Ephemeris Date.
         t = (2816788 - 625674) * (t + 3001) / (3000 + 3001) + 625674
         return t
-
-    def mod_M(self, M):
-        # Convert M such that M is between -180 deg and 180 deg.
-        M = np.mod(M, 360) - (np.mod(M, 360) >= 180) * 360
-        return M

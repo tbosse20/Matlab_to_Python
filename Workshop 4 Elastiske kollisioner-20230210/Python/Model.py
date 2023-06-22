@@ -20,8 +20,6 @@ class Model:
 
         fig, ax = plt.subplots()
         fig.canvas.mpl_connect('key_press_event', lambda event: self.buttonpush(event))
-        # ax.set_xlim(-1, 1)
-        # ax.set_ylim(-1, 1)
         plt.axis([-1, 1, -1, 1])
         self.fig, self.ax = fig, ax
 
@@ -37,7 +35,7 @@ class Model:
             verticalalignment='top')
 
     def make_balls(self, nballs, option):
-        # tilfældig generation af et antal bolde.
+        # Tilfældig generation af et antal bolde.
         balls = [None] * nballs  # balls = cell(1, nballs)
         # Generer hastighederne
         velocities = np.random.uniform(low=-5, high=5, size=(2, nballs))
@@ -91,8 +89,10 @@ class Model:
         pass_through = False
         for i in range(self.nballs - 1):
             for j in range(i + 1, self.nballs):
-                x1, x2 = self.balls[i].position.reshape((2,)), positions[:, i].reshape((2,))
-                u1, u2 = self.balls[j].position.reshape((2,)), positions[:, j].reshape((2,))
+                # print(i, j)
+                if i == j: print("AWD")
+                x1, x2 = self.balls[i].position.reshape((2,1)), positions[:, i].reshape((2,1))
+                u1, u2 = self.balls[j].position.reshape((2,1)), positions[:, j].reshape((2,1))
                 if self.pass_through(x1, x2, u1, u2):
                     pass_through = True
                     break
@@ -213,8 +213,8 @@ class Model:
         # hinanden.Dette sker kun ved meget store hastigheder og små
         # bolde.Funktionen ser om der er en skæring i de to baner som
         # boldene følger.
-        sort1 = np.sort([x1, x2], axis=1)
-        sort2 = np.sort([u1, u2], axis=1)
+        sort1 = np.sort([x1, x2], axis=0)
+        sort2 = np.sort([u1, u2], axis=0)
 
         x_min, x_max = sort1[0, 0], sort1[0, 1]
         y_min, y_max = sort1[1, 0], sort1[1, 1]
@@ -223,9 +223,12 @@ class Model:
 
         x_min, x_max = max([x_min, u_min]), min([x_max, u_max])
         y_min, y_max = max([y_min, v_min]), min([y_max, v_max])
-        # print(x1, x2, u1, u2)
+        # print(x1)
+        # print(x2)
+        # print(u1)
+        # print(u2)
         # print((x2[1] - x1[1]), (x2[0] - x1[0]))
-
+        # print(x2[0]-x1[0])
         slope1 = (x2[1] - x1[1]) / (x2[0] - x1[0])
         slope2 = (u2[1] - u1[1]) / (u2[0] - u1[0])
 

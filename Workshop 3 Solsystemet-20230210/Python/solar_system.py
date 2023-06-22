@@ -63,7 +63,7 @@ class Solar_system:
         for comet in self.comets:
             comet.update(t)
         if hasattr(self, "sun"):
-            self.sun.update()
+            self.sun.update_ball()
 
     def draw_system(self):
         for planet in self.planets:
