@@ -3,21 +3,20 @@ from matplotlib import pyplot as plt
 
 
 class Sun:
-    def __init__(self, r, ax):
-        self.name = 'Sun'
-        self.coordinates = [0, 0]
-        self.radius = r
-        self.color = 'y'
-        self.resolution = 500
-        self.ball = None
-        self.text = None
-        self.ax = ax
-        self.create_sun()
+    name = 'Sun'
+    coordinates = [0, 0]
+    color = 'y'
+    resolution = 500
 
-    def create_sun(self):
+    def __init__(self, r, ax):
+        # Constructer
+        self.radius = r
+        self.create_sun(ax)
+
+    def create_sun(self, ax):
         circle_points = self.make_circle()
         self.ball = plt.Polygon(circle_points, color=self.color)
-        if self.ax: self.ax.add_patch(self.ball)
+        ax.add_patch(self.ball)
         self.text = plt.text(self.coordinates[0], self.coordinates[1], self.name)
 
     def make_circle(self):

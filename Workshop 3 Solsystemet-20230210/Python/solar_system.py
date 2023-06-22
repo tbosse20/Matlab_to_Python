@@ -10,16 +10,13 @@ import numpy as np
 
 class Solar_system:
     def __init__(self):
-        self.sun = None
         self.planets: Planet = list()
         self.comets: Comet = list()
         self.t = -3000
         self.dt = 10
         self.playing = False
-        self.fig = None
         self.paused = False
         self.axis_lim = [-40, 40, -40, 40]
-        self.text = None
         self.show_text = True
 
         self.fig, self.ax = plt.subplots()
@@ -65,7 +62,8 @@ class Solar_system:
             planet.update(t)
         for comet in self.comets:
             comet.update(t)
-        self.sun.update()
+        if hasattr(self, "sun"):
+            self.sun.update()
 
     def draw_system(self):
         for planet in self.planets:
@@ -86,8 +84,9 @@ class Solar_system:
             else:
                 comet.text.set_visible(False)
 
-        self.sun.ball.set_visible(True)
-        self.sun.text.set_visible(self.show_text)
+        if hasattr(self, "sun"):
+            self.sun.ball.set_visible(True)
+            self.sun.text.set_visible(self.show_text)
 
         self.text.set_text(
             'q: afslut spillet\n'
@@ -111,7 +110,8 @@ class Solar_system:
             planet.radius *= scale
         for comet in self.comets:
             comet.radius *= scale
-        self.sun.radius *= scale
+        if hasattr(self, "sun"):
+            self.sun.radius *= scale
 
     @staticmethod
     def time_to_date(t):
