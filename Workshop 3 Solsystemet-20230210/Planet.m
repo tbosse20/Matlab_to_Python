@@ -1,6 +1,6 @@
 classdef Planet <handle
     %PLANET Class. Based on the method of https://ssd.jpl.nasa.gov/txt/aprx_pos_planets.pdf
-    
+
     properties
         name
         radius
@@ -15,18 +15,18 @@ classdef Planet <handle
         dL          %ændring i middelbreddegrad pr. århundrede
         baromega    %breddegrad af periapsis
         dbaromega   %ændring i breddegrad af periapsis pr. århundrede
-        t           %tid 
+        t           %tid
         b           %parameter
         c           %parameter
         s           %parameter
         f           %parameter
-        trace      
+        trace
         trace_length=200
         ball
         text
     end
-    
-    methods 
+
+    methods
         function obj=Planet(name,color,planet_data)
             %Constructer
             if nargin>0
@@ -47,14 +47,14 @@ classdef Planet <handle
                 obj.f=planet_data(13);
              end
         end
-        
-        
-        
-        
+
+
+
+
         function obj=update(obj,t)
             %Method for calculating the position of the planet at time t.
             if (t<-3000 || t>3000)
-                error('t must be in [-3000,3000] for the model to be accurate') 
+                error('t must be in [-3000,3000] for the model to be accurate')
             end
             obj.t=t;
             %Convert t to the correct time relative to the Julian Ephemeris
@@ -80,12 +80,12 @@ classdef Planet <handle
                 obj.update_planet();
             end
         end
-        
+
         function circle=make_circle(obj)
             t=linspace(0,2*pi,obj.resolution);
             circle=obj.coordinates+obj.radius*[cos(t);sin(t)];
         end
-        
+
         function obj=make_planet(obj)
             circle=obj.make_circle();
             obj.ball=patch(circle(1,:),circle(2,:),obj.color,'visible','off');
@@ -93,26 +93,26 @@ classdef Planet <handle
             trace=obj.coordinates.*ones(2,obj.trace_length);
             obj.trace=plot(trace(1,:),trace(2,:));
         end
-        
+
         function obj=update_planet(obj,d)
             circle=obj.make_circle();
             set(obj.ball, 'XData', circle(1,:),'YData',circle(2,:),'Visible','off')
             set(obj.text, 'Position', [obj.coordinates(1),obj.coordinates(2)]);
             set(obj.trace, 'XData', [obj.coordinates(1) obj.trace.XData(1:end-1)],'YData', [obj.coordinates(2) obj.trace.YData(1:end-1)]);
         end
-        
+
         function t=time_converter(obj,t)
-            %Method for converting t to Julian Ephemeris Date and then to 
+            %Method for converting t to Julian Ephemeris Date and then to
             %centuries past J2000.0.  This is because of the available data.
             t=(2816788-625674)*(t+3001)/(3000+3001)+625674;
             t= (t-2451545)/36525;
         end
-        
+
         function M=mod_M(obj,M)
             %Convert M to a value between -180 deg and 180 deg.
             M=mod(M,360)-(mod(M,360)>=180)*360;
         end
-            
+
     end
 end
 

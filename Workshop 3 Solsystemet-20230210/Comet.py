@@ -3,28 +3,30 @@ from matplotlib import pyplot as plt
 import matplotlib.patches as patches
 from newtons_method import *
 
+
 class Comet:
     # COMET Class. Uses the data from https://ssd.jpl.nasa.gov/sbdb.cgi?sstr = 1P
     coordinates = [0, 0]
     resolution = 200
     trace_length = 200
 
-    #da          # ændring i halve storakse pr. århundrede
-    #de          # ændring i excentricitet pr. århundrede
-    #t           # tid
+    # da          # ændring i halve storakse pr. århundrede
+    # de          # ændring i excentricitet pr. århundrede
+    # t           # tid
 
-    def __init__(self, name, color, comet_data):
+    def __init__(self, name, color, comet_data, ax):
         # Constructor
+        nargin = 1  # TODO: What is this?
         if nargin > 0:
             self.name = name
             self.color = color
-            self.radius = comet_data(1)
-            self.a = comet_data(2)          # halve storakse
-            self.e = comet_data(3)          # excentricitet
-            self.M_0 = comet_data(4)
-            self.t_0 = comet_data(5)
-            self.n = comet_data(6)
-
+            self.radius = comet_data[0]
+            self.a = comet_data[1]  # halve storakse
+            self.e = comet_data[2]  # excentricitet
+            self.M_0 = comet_data[3]
+            self.t_0 = comet_data[4]
+            self.n = comet_data[5]
+            self.ax = ax
 
     def time_converter(self, t):
         # Convert time t to Julian Ephemeris Date.
@@ -37,12 +39,12 @@ class Comet:
         return M
 
     def update_ball(self):
-        circle = self.make_circle()
+        circle_points = self.make_circle()
+        self.ball.set_xy(circle_points)
         # set(self.ball, 'XData', circle(1,:), 'YData', circle(2,:), 'Visible', 'off')
         # set(self.text, 'Position', [self.coordinates(1), self.coordinates(2)])
         # set(self.trace, 'XData', [self.coordinates(1), self.trace.XData(1: -1)], 'YData', [self.coordinates(2), self.trace.YData[1: -1]])
         # disp(self.trace.XData(1))
-        return circle
 
     def update(self, t):
         # Method for calculating the comets position at time t.
@@ -61,25 +63,32 @@ class Comet:
         E_0 = M + estar * np.sin(M)
         # Apply Newtons method
         E = newtons_method(
-            E_0, @ (E) E - estar * np.sin(np.radians(E)) - M,
-            @(E) 1 - self.e * np.cos(E), 10 ^ (-6)
-        )
+            E_0, lambda E: E - estar * np.sin(np.deg2rad(E)) - M,
+            lambda E: 1 - self.e * np.cos(np.deg2rad(E)), 1e-6)
         # Update coordinates.
         self.coordinates = [
             self.a * (np.cos(E) - self.e),
-            self.a * np.sqrt(1 - self.e ^ 2) * np.sin(E)
+            self.a * np.sqrt(1 - self.e ** 2) * np.sin(E)
         ]
-        if not self.ball: self.make_ball()
-        else: self.update_ball()
+        if hasattr(self, "ball"):
+            self.update_ball()
+        else:
+            self.make_ball()
 
     def make_circle(self):
+        # Create circle in Python: matplotlib.patches.Circle(position, radius, color)
+
         t = np.linspace(0, 2 * np.pi, self.resolution)
-        circle = self.coordinates + self.radius * [np.cos(t), np.sin(t)]
-        return circle
+        x_points = np.add(self.coordinates[0], np.multiply(self.radius, np.cos(t)))
+        y_points = self.coordinates[1] + self.radius * np.sin(t)
+        circle_points = np.stack((x_points, y_points), axis=1)
+        return circle_points
 
     def make_ball(self):
-        circle = self.make_circle()
-        self.ball = patches.Patch(circle[1,:], circle[2,:], self.color, 'visible', 'off')
-        self.text = plt.text(self.coordinates[1], self.coordinates[2], self.name)
-        trace = self.coordinates * np.ones(2, self.trace_length)
-        self.trace = plt.plot(trace[1, :], trace[2, :])
+        circle_points = self.make_circle()
+        # TODO: Compare circle with original
+        self.ball = plt.Polygon(circle_points, self.color)
+        self.ax.add_patch(self.ball)
+        self.text = plt.text(self.coordinates[0], self.coordinates[1], self.name)
+        trace = np.multiply(np.transpose([self.coordinates]), np.ones((2, self.trace_length)))
+        self.trace = plt.plot(trace[0, :], trace[1, :])

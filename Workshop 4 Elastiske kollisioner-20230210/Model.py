@@ -20,8 +20,9 @@ class Model:
 
         fig, ax = plt.subplots()
         fig.canvas.mpl_connect('key_press_event', lambda event: self.buttonpush(event))
-        ax.set_xlim(-1, 1)
-        ax.set_ylim(-1, 1)
+        # ax.set_xlim(-1, 1)
+        # ax.set_ylim(-1, 1)
+        plt.axis([-1, 1, -1, 1])
         self.fig, self.ax = fig, ax
 
         self.container = Container(ngon, self.ax)

@@ -9,6 +9,8 @@ Workshop 3
 - Check if model.py is complete
 - Check if model1 and model12 are being used
 - Translate the "solar_system" file
+    -> "time_elapsed = plt.waitforbuttonpress(timeout=0.01)"
+- Delopgave 2 - Trapezreglen: @(t)?
 
 Workshop 4
 - "slope2 = (u2[1] - u1[1]) / (u2[0] - u1[0])" not working in "Model.py"

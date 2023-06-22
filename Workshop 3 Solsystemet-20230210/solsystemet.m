@@ -32,6 +32,7 @@ e=0.01673163;
 %Implementer trapezreglen i filen trapezreglen.m og brug følgende kode til
 %at
 dist=a*trapezreglen(@(t) sqrt(1+e^2*sin(t).^2-e^2),0,2*pi,10000);
+dist
 
 %% Delopgave 3
 %I denne opgave skal Newtons metode implementeres i filen newtons_method.m

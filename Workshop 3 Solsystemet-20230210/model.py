@@ -3,7 +3,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib.animation as animation
 import matplotlib.patches as patches
-from Planet import Planet
+
 
 # https://nickcharlton.net/posts/drawing-animating-shapes-matplotlib.html
 class System:
@@ -12,18 +12,35 @@ class System:
     anim = fig = info = None
     tic = time.time()  # reset timer
 
+    class Planet:
+        def __init__(self, name, ax, addx, ay, addy, movement, r, res, color):
+            self.name = name
+            self.ax = ax
+            self.kx = addx
+            self.ay = ay
+            self.ky = addy
+            self.movement = movement
+            self.r = r
+            self.res = res
+            self.color = color
+
     planets = [
         Planet("Sun", 1, 0, 1, 0, 1, 696.340, 80, "yellow"),
         Planet("Earth", 100.0000180000000, -1.6731633011693, 99.9860196455882, 0, 1, 6.371, 80, "blue"),
         Planet("Halley", 1783.41442925537, -1724.8166181036783, 107.3639924082853, 0, 75.32, 0.011, 80, "blue"),
-        Planet("Mercury", 38.7098430000000, -7.9601608881522, 37.8825524974147, 0, 0.240846, 2.4397, 80, [0.75, 0.75, 0.75]),
+        Planet("Mercury", 38.7098430000000, -7.9601608881522, 37.8825524974147, 0, 0.240846, 2.4397, 80,
+               [0.75, 0.75, 0.75]),
         Planet("Mars", 152.3712430000000, -14.2261578635317, 151.7056759841467, 0, 1.881, 3.3895, 80, "red"),
         Planet("Jupiter", 520.2480190000000, -25.2507058253821, 519.6348748195645, 0, 11.86, 69.911, 80, "red"),
-        Planet("Saturn", 954.1498830000000, -52.9631902430348, 952.6788019622321, 0, 29.46, 58.232, 80, [0.7, 0.0, 0.7]),
-        Planet("Uranus", 1918.7979479999999, -89.9098829686152, 1916.6903188031135, 0, 84.01, 25.362, 80, [0.7, 0.7, 0.0]),
-        Planet("Neptune", 3006.9527520000001, -26.9254276529813, 3006.8321991933768, 0, 164.8, 24.622, 80, [0.0, 0.7, 0.7]),
+        Planet("Saturn", 954.1498830000000, -52.9631902430348, 952.6788019622321, 0, 29.46, 58.232, 80,
+               [0.7, 0.0, 0.7]),
+        Planet("Uranus", 1918.7979479999999, -89.9098829686152, 1916.6903188031135, 0, 84.01, 25.362, 80,
+               [0.7, 0.7, 0.0]),
+        Planet("Neptune", 3006.9527520000001, -26.9254276529813, 3006.8321991933768, 0, 164.8, 24.622, 80,
+               [0.0, 0.7, 0.7]),
         Planet("Venus", 72.3321020000000, -0.4892536146070, 72.3304473277955, 0, 0.615, 6.0518, 80, [1.0, 0.4, 0.6]),
-        Planet("Pluto", 3948.6860350000001, -982.06399176825134, 3824.4660013106305, 0, 247.92065, 1.1883, 80, [0.5, 0.5, 0.5])
+        Planet("Pluto", 3948.6860350000001, -982.06399176825134, 3824.4660013106305, 0, 247.92065, 1.1883, 80,
+               [0.5, 0.5, 0.5])
     ]
 
     v = textvisible = playing = moving = 1
@@ -43,10 +60,9 @@ def main():
     init_figure()
     create_elements()
     system.anim = animation.FuncAnimation(
-        system.fig,update_graphics, interval=30, cache_frame_data=False)
+        system.fig, update_graphics, interval=30, cache_frame_data=False)
     plt.show()
     print('Tak fordi du spillede!')
-
 
 
 def btn(event):
@@ -54,18 +70,30 @@ def btn(event):
 
     if event.key == ' ':
         system.moving = 1 - system.moving
-        if system.moving: system.anim.resume()
-        else: system.anim.pause()
-    elif event.key == 'up':     zoom = 0.5
-    elif event.key == 'down':   zoom = 2
-    elif event.key == 'q':      exit()
-    elif event.key == 'tab':    system.moving = 2
-    elif event.key == 'left':   size = 0.5
-    elif event.key == 'right':  size = 2
-    elif event.key == ',':      system.v *= 0.5
-    elif event.key == '.':      system.v *= 2
-    elif event.key == 't':      system.textvisible = 1 - system.textvisible
-    else: print(f'{event.key=}')  # show key info
+        if system.moving:
+            system.anim.resume()
+        else:
+            system.anim.pause()
+    elif event.key == 'up':
+        zoom = 0.5
+    elif event.key == 'down':
+        zoom = 2
+    elif event.key == 'q':
+        exit()
+    elif event.key == 'tab':
+        system.moving = 2
+    elif event.key == 'left':
+        size = 0.5
+    elif event.key == 'right':
+        size = 2
+    elif event.key == ',':
+        system.v *= 0.5
+    elif event.key == '.':
+        system.v *= 2
+    elif event.key == 't':
+        system.textvisible = 1 - system.textvisible
+    else:
+        print(f'{event.key=}')  # show key info
 
     if event.key == "up" or event.key == "down":
         system.xmax *= zoom
@@ -100,7 +128,6 @@ def create_ball(planet):
 def create_elements():
     # Create each 'ball', 'trace', and 'text'
     for planet in system.planets:
-
         # Create 'ball'
         ball = create_ball(planet)
         patch = patches.Polygon(ball, color=planet.color)
@@ -118,13 +145,12 @@ def create_elements():
 
 
 def init_figure():
-
     # Set up figure window
     system.fig = plt.figure()
     system.ax = plt.axes(xlim=(-system.xmax, system.xmax), ylim=(-system.ymax, system.ymax))
     plt.title("Solsystemet")
     plt.axis('off')
-    system.fig.canvas.mpl_connect('key_press_event', btn) # Set the function that gets called when a key is pressed
+    system.fig.canvas.mpl_connect('key_press_event', btn)  # Set the function that gets called when a key is pressed
 
     # Instructions
     system.info = system.ax.text(
@@ -143,7 +169,6 @@ def update_graphics(i):
 
     # Iterate each planet
     for planet in system.planets:
-
         # Update 'ball' position
         ball = np.array([planet.bx + planet.cx, planet.by + planet.cy]).T
         planet.patch.set_xy(ball)
@@ -156,6 +181,7 @@ def update_graphics(i):
         # Update 'text'
         planet.label.set_position([planet.cx, planet.cy])
         planet.label.set_visible(system.textvisible)
+
 
 if __name__ == "__main__":
     main()

@@ -10,7 +10,7 @@ run_example = 1
 
 ## Eksempel 1.
 if run_example == 1:
-    nballs = 12
+    nballs = 4
     nsides = 4
     A = Model(nsides, nballs, 'equal')
     A.run()

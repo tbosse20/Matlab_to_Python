@@ -295,7 +295,6 @@ g.uranustext=text(g.marscx,g.uranuscy,"Uranus");
 % trace (tail)
 tlen=5;
 g.uranustrace.x=ones(1,tlen)*g.uranuscx;
-g.uranuscx
 g.uranustrace.x
 g.uranustrace.y=ones(1,tlen)*g.uranuscy;
 g.uranustrace.h=plot(g.uranustrace.x,g.uranustrace.y,'b:');
@@ -472,6 +471,7 @@ set(g.venustext, 'Position', [g.venuscx, g.venuscy]);
 set(g.plutotext, 'Position', [g.plutocx, g.plutocy]);
 
 % update trace
+g.earthcx
 g.earthtrace.x=[g.earthcx g.earthtrace.x(1:end-1)];
 g.earthtrace.y=[g.earthcy g.earthtrace.y(1:end-1)];
 set(g.earthtrace.h,'XData',g.earthtrace.x,'YData',g.earthtrace.y);
@@ -497,6 +497,7 @@ g.saturntrace.y=[g.saturncy g.saturntrace.y(1:end-1)];
 set(g.saturntrace.h,'XData',g.saturntrace.x,'YData',g.saturntrace.y);
 
 g.uranustrace.x=[g.uranuscx g.uranustrace.x(1:end-1)];
+g.uranustrace.x;
 g.uranustrace.y=[g.uranuscy g.uranustrace.y(1:end-1)];
 set(g.uranustrace.h,'XData',g.uranustrace.x,'YData',g.uranustrace.y);
 
@@ -509,6 +510,7 @@ g.venustrace.y=[g.venuscy g.venustrace.y(1:end-1)];
 set(g.venustrace.h,'XData',g.venustrace.x,'YData',g.venustrace.y);
 
 g.plutotrace.x=[g.plutocx g.plutotrace.x(1:end-1)];
+g.plutocx
 g.plutotrace.y=[g.plutocy g.plutotrace.y(1:end-1)];
 set(g.plutotrace.h,'XData',g.plutotrace.x,'YData',g.plutotrace.y);
 

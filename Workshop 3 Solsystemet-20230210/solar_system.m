@@ -59,6 +59,7 @@ classdef solar_system<handle
             l=length(names);
             obj.comets=cell(1:l);
             %Sort the comets wrt radius
+            sort(comet_data(:,1))
             [~,idx]=sort(comet_data(:,1));
             idx=flip(idx);
             names=names(idx);
@@ -214,7 +215,7 @@ classdef solar_system<handle
             %positions for the planets and draws them for each time step
             obj.playing=1;
             obj.dt=dt;
-            tic
+            tic;
             while obj.playing==1 && t<=3000
                 if obj.paused
                     obj.draw_system();
@@ -223,7 +224,7 @@ classdef solar_system<handle
                 obj.update(t);
                 obj.draw_system();
                 time_elapsed=toc;
-                tic
+                toc
                 t=t+obj.dt*time_elapsed;
             end
             close(1)
