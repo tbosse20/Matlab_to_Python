@@ -4,11 +4,9 @@ to the mathlab code. Figure out what is wrong..
 
 Workshop 2
 - Line transparent at sphere
-- Ellers færdig
 
 Workshop 3
-- Delopgave 2 - Trapezreglen: @(t)?
-- Ellers færdig
+- Delopgave 2 - Trapezreglen: @(t)? How does this translate to Python?
 
 Workshop 4
-- (x2[0] - x1[0]) == 0, which is not allowed in "model1.py"
+- "pass_through" method in "model1.py" has (x2[0] - x1[0]) equal zero, which is not allowed.
