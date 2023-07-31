@@ -89,7 +89,6 @@ class Model:
         pass_through = False
         for i in range(self.nballs - 1):
             for j in range(i + 1, self.nballs):
-                # print(i, j)
                 if i == j: print("AWD")
                 x1, x2 = self.balls[i].position.reshape((2,1)), positions[:, i].reshape((2,1))
                 u1, u2 = self.balls[j].position.reshape((2,1)), positions[:, j].reshape((2,1))
@@ -223,12 +222,8 @@ class Model:
 
         x_min, x_max = max([x_min, u_min]), min([x_max, u_max])
         y_min, y_max = max([y_min, v_min]), min([y_max, v_max])
-        # print(x1)
-        # print(x2)
-        # print(u1)
-        # print(u2)
-        # print((x2[1] - x1[1]), (x2[0] - x1[0]))
-        # print(x2[0]-x1[0])
+
+        # TODO: BUG (x2[0] - x1[0]) equals to zero sometimes
         slope1 = (x2[1] - x1[1]) / (x2[0] - x1[0])
         slope2 = (u2[1] - u1[1]) / (u2[0] - u1[0])
 
